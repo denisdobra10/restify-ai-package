@@ -1,1 +1,0 @@
-{"version":3,"file":"useChatScroll.d.ts","sourceRoot":"","sources":["../../src/composables/useChatScroll.ts"],"names":[],"mappings":"AAEA,MAAM,WAAW,mBAAmB;IAClC,cAAc,EAAE,CAAC,SAAS,CAAC,EAAE,WAAW,GAAG,IAAI,KAAK,IAAI,CAAA;IACxD,eAAe,EAAE,CAAC,SAAS,EAAE,WAAW,KAAK,IAAI,CAAA;IACjD,iBAAiB,EAAE,MAAM,IAAI,CAAA;CAC9B;AAED;;GAEG;AACH,wBAAgB,aAAa,IAAI,mBAAmB,CA0DnD"}

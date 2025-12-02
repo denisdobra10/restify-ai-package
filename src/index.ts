@@ -56,6 +56,9 @@ export type {
   UserAvatarUI,
   ChatMessageActionsUI,
   ChatMessageActionsTexts,
+  // Config types
+  HistoryLimitConfig,
+  LoadingTextConfig,
 } from './types'
 
 export { ChatRoles } from './types'

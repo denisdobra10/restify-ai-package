@@ -41,6 +41,13 @@ export const defaultLabels: Required<RestifyAiLabels> = {
   // Support mode
   toggleSupportMode: 'Toggle support mode',
   exitSupportMode: 'Exit support mode',
+  // History limit
+  historyLimitWarningTitle: 'Approaching Chat Limit',
+  historyLimitWarningMessage: 'You are approaching the maximum number of messages in this conversation.',
+  historyLimitReachedTitle: 'Chat Limit Reached',
+  historyLimitReachedMessage: 'You have reached the maximum number of messages. Start a new chat to continue.',
+  startNewChat: 'Start New Chat',
+  continueChat: 'Continue',
   // Setup mode labels
   setupWelcomeTitle: 'Welcome to AI Assistant',
   setupWelcomeDescription: 'Let\'s get you set up to start using AI features.',

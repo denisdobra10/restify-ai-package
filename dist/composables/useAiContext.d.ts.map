@@ -1,1 +1,0 @@
-{"version":3,"file":"useAiContext.d.ts","sourceRoot":"","sources":["../../src/composables/useAiContext.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,UAAU,CAAA;AAE3C;;GAEG;AACH,wBAAgB,YAAY;;;;;;;;6BAKM,WAAW,GAAG,IAAI,KAAG,IAAI;wBAIhC,IAAI;6BAIG,OAAO,CAAC,WAAW,CAAC,KAAG,IAAI;EAoB5D"}

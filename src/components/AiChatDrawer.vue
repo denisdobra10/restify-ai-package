@@ -25,292 +25,133 @@
           class="h-full flex flex-col relative bg-white dark:bg-gray-900"
           :class="ui?.panel"
         >
-        <!-- Header Slot -->
-        <slot name="header" v-bind="headerSlotProps">
-          <div 
-            class="flex items-center justify-between px-4 sm:px-6 pt-4 border-b border-gray-200 dark:border-gray-700 pb-4"
-            :class="ui?.header"
-          >
-            <div class="flex items-center gap-3">
-              <template v-if="!isSetupMode">
-                <button
-                  v-if="showNewChatButton && store.chatHistory.length > 0"
-                  type="button"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-400 transition-all duration-200 shadow-sm"
-                  :class="ui?.newChatButton"
-                  @click="startNewChat"
-                >
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-                  </svg>
-                  <span>{{ t('newChat') }}</span>
-                </button>
-                <span v-else class="text-xs text-gray-400 dark:text-gray-500 font-medium">
-                  {{ t('keyboardShortcutHint') }}
-                </span>
-              </template>
-              <div v-else class="flex items-center gap-2">
-                <span class="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Setup Required</span>
-              </div>
-            </div>
-
-            <!-- Quota Display -->
-            <div v-if="showQuota && !isSetupMode" class="flex items-center gap-2 ml-auto mr-3">
-              <slot name="quota" :quota="store.quota">
-                <span 
-                  v-if="store.quota.remaining > 0" 
-                  class="text-xs text-green-600 dark:text-green-400"
-                  :class="ui?.quotaDisplay"
-                >
-                  {{ t('quotaRemaining', { count: store.quota.remaining }) }}
-                </span>
-                <span 
-                  v-else-if="store.quota.remaining === 0" 
-                  class="text-xs text-red-600 dark:text-red-400"
-                  :class="ui?.quotaDisplay"
-                >
-                  {{ t('noQuota') }}
-                </span>
-              </slot>
-            </div>
-
-            <div class="flex items-center gap-1" :class="ui?.headerActions">
-              <button
-                v-if="showCloseButton"
-                type="button"
-                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                :class="ui?.headerActionButton"
-                :title="t('close')"
-                @click="handleClose"
-              >
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-
-              <button
-                v-if="showMinimizeButton"
-                type="button"
-                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                :class="ui?.headerActionButton"
-                :title="t('minimize')"
-                @click="handleMinimize"
-              >
-                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
-                </svg>
-              </button>
-
-              <button
-                v-if="showFullscreenToggle"
-                type="button"
-                class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                :class="ui?.headerActionButton"
-                :title="isFullscreen ? t('exitFullscreen') : t('fullscreen')"
-                @click="toggleFullscreen"
-              >
-                <svg v-if="!isFullscreen" class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                </svg>
-                <svg v-else class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </slot>
-
-        <div 
-          class="h-full flex flex-col mx-auto w-full overflow-hidden" 
-          :class="[{ 'max-w-5xl': isFullscreen }, ui?.body]"
-        >
-          <!-- Setup Mode -->
-          <div v-if="isSetupMode" class="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
-            <slot name="setup">
-              <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-                <svg class="w-7 h-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-                </svg>
-              </div>
-              
-              <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                Almost there!
-              </h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 max-w-sm text-center">
-                Configure the plugin in your app entry file to start using AI.
-              </p>
-              
-              <div class="w-full max-w-md">
-                <div class="bg-gray-900 rounded-xl overflow-hidden">
-                  <div class="flex items-center justify-between px-4 py-2 bg-gray-800/50 border-b border-gray-700">
-                    <span class="text-xs text-gray-400">main.ts</span>
-                    <button 
-                      type="button"
-                      class="text-xs text-gray-400 hover:text-white transition-colors"
-                      @click="copySetupCode"
-                    >
-                      {{ copied ? '✓ Copied' : 'Copy' }}
-                    </button>
-                  </div>
-                  <pre class="text-xs text-gray-100 p-4 overflow-x-auto leading-relaxed"><code class="language-typescript"><span class="text-purple-400">import</span> { RestifyAiPlugin } <span class="text-purple-400">from</span> <span class="text-green-400">'@doderasoftware/restify-ai'</span>
-
-app.<span class="text-yellow-300">use</span>(RestifyAiPlugin, {
-  <span class="text-blue-300">endpoints</span>: {
-    <span class="text-blue-300">ask</span>: <span class="text-green-400">'/api/ai/ask'</span>,
-    <span class="text-blue-300">quota</span>: <span class="text-green-400">'/api/ai/quota'</span>, <span class="text-gray-500">// optional</span>
-  },
-  <span class="text-blue-300">getAuthToken</span>: () => <span class="text-yellow-300">getToken</span>(),
-})</code></pre>
-                </div>
-                
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-4 text-center">
-                  Need help? Check the <a href="https://github.com/doderasoftware/restify-ai" target="_blank" class="text-primary hover:underline">documentation</a>
-                </p>
-              </div>
-            </slot>
-          </div>
-
-          <!-- Normal mode - Empty State -->
-          <template v-else>
-            <div v-if="store.chatHistory.length === 0" class="flex-1 flex flex-col overflow-y-auto">
-              <slot name="empty-state" :suggestions="mappedSuggestions" :on-click="onExampleClick">
-                <AiEmptyState @item-click="onExampleClick" />
-              </slot>
-            </div>
-
-            <!-- Chat Messages -->
-            <div
-              v-else
-              ref="chatContainer"
-              class="flex-1 overflow-y-auto py-6 pb-24"
+          <!-- Header Slot -->
+          <slot name="header" v-bind="headerSlotProps">
+            <DrawerHeader
+              :ui="ui"
+              :is-setup-mode="isSetupMode"
+              :show-new-chat-button="showNewChatButton"
+              :has-history="store.chatHistory.length > 0"
+              :show-quota="showQuota"
+              :quota="store.quota"
+              :show-close-button="showCloseButton"
+              :show-minimize-button="showMinimizeButton"
+              :show-fullscreen-toggle="showFullscreenToggle"
+              :is-fullscreen="isFullscreen"
+              :t="t"
+              @new-chat="startNewChat"
+              @close="handleClose"
+              @minimize="handleMinimize"
+              @toggle-fullscreen="toggleFullscreen"
             >
-              <div class="max-w-3xl mx-auto px-4 space-y-6">
-                <!-- Assistant Badge -->
-                <div class="flex justify-center">
-                  <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-medium text-primary">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
-                    </svg>
-                    <span>{{ t('title') || getLabel('aiName') }}</span>
-                  </div>
-                </div>
+              <template #quota>
+                <slot name="quota" :quota="store.quota" />
+              </template>
+            </DrawerHeader>
+          </slot>
 
-                <!-- Messages -->
-                <template v-for="(message, index) in store.chatHistory" :key="message.id || index">
-                  <slot name="message" :message="message" :is-user="message.role === 'user'" :is-loading="message.loading" :is-streaming="message.streaming">
-                    <ChatMessage
-                      :message="message"
-                      :loading-text="loadingMessage"
-                      @copy="copyToClipboard"
-                    />
-                  </slot>
-                </template>
-
-                <!-- Contact Support Button -->
-                <div v-if="store.quota.remaining === 0" class="flex justify-center">
-                  <button
-                    type="button"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all shadow-sm"
-                    @click="handleContactSupport"
-                  >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                    </svg>
-                    <span>{{ getLabel('contactSupport') }}</span>
-                  </button>
-                </div>
-
-                <!-- Error Message -->
-                <div 
-                  v-if="store.error.message" 
-                  class="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 px-2 py-1 pb-6"
-                  :class="ui?.errorContainer"
-                >
-                  <span :class="ui?.errorMessage">{{ store.error.message }}</span>
-                  <button
-                    type="button"
-                    class="inline-flex items-center gap-1 text-red-700 dark:text-red-300 hover:text-red-800 dark:hover:text-red-200 font-medium"
-                    :class="ui?.retryButton"
-                    :title="t('retry')"
-                    @click="handleRetry"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div id="rai-chat-bottom" class="h-8" />
-
-            <!-- Chat Input -->
-            <slot name="input" v-bind="inputSlotProps">
-              <ChatInput
-                v-model="question"
-                :sending="store.sending"
-                :placeholder="props.texts?.placeholder || getLabel('inputPlaceholder')"
-                :support-placeholder="props.texts?.supportPlaceholder || getLabel('supportPlaceholder')"
-                :suggestions="mappedSuggestions"
-                :has-history="store.chatHistory.length > 0"
-                :support-request-mode="store.supportRequestMode"
-                :show-support-mode-toggle="enableSupportMode"
-                @submit="handleSend"
-                @cancel="store.cancelRequest"
-                @suggestion-select="applySuggestion"
-                @toggle-support-mode="toggleSupportMode"
-              >
-                <template #context-link>
-                  <slot name="context-link" />
-                </template>
-              </ChatInput>
-            </slot>
-          </template>
-        </div>
-      </div>
-
-      <!-- Close Confirmation Dialog -->
-      <Transition
-        enter-active-class="transition ease-out duration-200"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition ease-in duration-150"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
-        <div v-if="showCloseConfirm" class="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
           <div 
-            class="bg-white dark:bg-gray-800 rounded-xl p-6 m-4 max-w-sm w-full shadow-xl"
-            :class="ui?.closeConfirmModal"
+            class="h-full flex flex-col mx-auto w-full overflow-hidden" 
+            :class="[{ 'max-w-5xl': isFullscreen }, ui?.body]"
           >
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-              {{ t('closeConfirmTitle') }}
-            </h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
-              {{ t('closeConfirmMessage') }}
-            </p>
-            <div class="flex justify-end gap-3">
-              <button
-                type="button"
-                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                :class="ui?.cancelButton"
-                @click="showCloseConfirm = false"
-              >
-                {{ t('cancel') }}
-              </button>
-              <button
-                type="button"
-                class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
-                :class="ui?.closeConfirmButton"
-                @click="confirmCloseAction"
-              >
-                {{ t('confirmClose') }}
-              </button>
+            <!-- Setup Mode -->
+            <div v-if="isSetupMode" class="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
+              <slot name="setup">
+                <SetupGuide :copied="copied" @copy="copySetupCode" />
+              </slot>
             </div>
+
+            <!-- Normal mode -->
+            <template v-else>
+              <!-- Empty State -->
+              <div v-if="store.chatHistory.length === 0" class="flex-1 flex flex-col overflow-y-auto">
+                <slot name="empty-state" :suggestions="mappedSuggestions" :on-click="onExampleClick">
+                  <AiEmptyState @item-click="onExampleClick" />
+                </slot>
+              </div>
+
+              <!-- Chat Messages -->
+              <div
+                v-else
+                ref="chatContainer"
+                class="flex-1 overflow-y-auto py-6 pb-24"
+              >
+                <DrawerMessageList
+                  :messages="store.chatHistory"
+                  :loading-message="loadingMessage"
+                  :quota="store.quota"
+                  :error="store.error"
+                  :ui="ui"
+                  :t="t"
+                  @copy="copyToClipboard"
+                  @contact-support="handleContactSupport"
+                  @retry="handleRetry"
+                >
+                  <template #message="slotProps">
+                    <slot 
+                      name="message" 
+                      :message="slotProps.message" 
+                      :is-user="slotProps.isUser" 
+                      :is-loading="slotProps.isLoading" 
+                      :is-streaming="slotProps.isStreaming"
+                    />
+                  </template>
+                </DrawerMessageList>
+              </div>
+
+              <div id="rai-chat-bottom" class="h-8" />
+
+              <!-- Chat Input -->
+              <slot name="input" v-bind="inputSlotProps">
+                <ChatInput
+                  v-model="question"
+                  :sending="store.sending"
+                  :placeholder="props.texts?.placeholder || getLabel('inputPlaceholder')"
+                  :support-placeholder="props.texts?.supportPlaceholder || getLabel('supportPlaceholder')"
+                  :suggestions="mappedSuggestions"
+                  :has-history="store.chatHistory.length > 0"
+                  :support-request-mode="store.supportRequestMode"
+                  :show-support-mode-toggle="enableSupportMode"
+                  @submit="handleSend"
+                  @cancel="store.cancelRequest"
+                  @suggestion-select="applySuggestion"
+                  @toggle-support-mode="toggleSupportMode"
+                >
+                  <template #context-link>
+                    <slot name="context-link" />
+                  </template>
+                </ChatInput>
+              </slot>
+            </template>
           </div>
         </div>
-      </Transition>
+
+        <!-- Close Confirmation Dialog -->
+        <ConfirmDialog
+          :show="showCloseConfirm"
+          :title="t('closeConfirmTitle')"
+          :message="t('closeConfirmMessage')"
+          :confirm-text="t('confirmClose')"
+          :cancel-text="t('cancel')"
+          :ui="ui"
+          confirm-variant="danger"
+          @confirm="confirmCloseAction"
+          @cancel="showCloseConfirm = false"
+        />
+
+        <!-- History Limit Warning Dialog -->
+        <ConfirmDialog
+          :show="showHistoryLimitWarning"
+          :title="historyLimitDialogTitle"
+          :message="historyLimitDialogMessage"
+          :confirm-text="t('startNewChat')"
+          :cancel-text="historyLimitReached ? t('continueChat') : t('cancel')"
+          :ui="ui"
+          :icon="'warning'"
+          confirm-variant="primary"
+          @confirm="handleHistoryLimitAction"
+          @cancel="dismissHistoryLimitWarning"
+        />
       </aside>
     </Transition>
   </Teleport>
@@ -321,9 +162,15 @@ import { computed, ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useRestifyAiStore } from '../store'
 import { getLabel, isConfigured, getConfigValue } from '../config'
 import { useAiSuggestions } from '../composables/useAiSuggestions'
+import { useLoadingText } from '../composables/useLoadingText'
+import { useHistoryLimit } from '../composables/useHistoryLimit'
 import AiEmptyState from './AiEmptyState.vue'
 import ChatMessage from './ChatMessage.vue'
 import ChatInput from './ChatInput.vue'
+import DrawerHeader from './drawer/DrawerHeader.vue'
+import DrawerMessageList from './drawer/DrawerMessageList.vue'
+import SetupGuide from './drawer/SetupGuide.vue'
+import ConfirmDialog from './drawer/ConfirmDialog.vue'
 import type { 
   ChatAttachment, 
   AISuggestion, 
@@ -334,38 +181,28 @@ import type {
   InputSlotProps,
   AiChatDrawerUI,
   AiChatDrawerTexts,
+  HistoryLimitConfig,
+  LoadingTextConfig,
 } from '../types'
 
 interface Props {
   modelValue: boolean
-  /** Custom UI classes for styling */
   ui?: AiChatDrawerUI
-  /** Custom text overrides for i18n support */
   texts?: AiChatDrawerTexts
-  /** Width of the drawer when not fullscreen */
   width?: string
-  /** Width of the drawer when fullscreen */
   fullscreenWidth?: string
-  /** Position of the drawer */
   position?: 'left' | 'right'
-  /** Show backdrop overlay */
   showBackdrop?: boolean
-  /** Close on backdrop click */
   closeOnBackdropClick?: boolean
-  /** Close on escape key */
   closeOnEscape?: boolean
-  /** Show quota display */
   showQuota?: boolean
-  /** Show fullscreen toggle */
   showFullscreenToggle?: boolean
-  /** Show minimize button */
   showMinimizeButton?: boolean
-  /** Show close button */
   showCloseButton?: boolean
-  /** Show new chat button */
   showNewChatButton?: boolean
-  /** Confirm before closing if there's chat history */
   confirmClose?: boolean
+  historyLimit?: HistoryLimitConfig
+  loadingText?: LoadingTextConfig
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -390,13 +227,13 @@ const emit = defineEmits<{
   (e: 'new-chat'): void
 }>()
 
-// Simple getter/setter for v-model
+// v-model
 const modelValue = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value)
 })
 
-// Text helper - not computed, just a function
+// Text helper
 function t(key: keyof AiChatDrawerTexts, params?: Record<string, any>): string {
   const customText = props.texts?.[key]
   if (customText) {
@@ -411,35 +248,43 @@ function t(key: keyof AiChatDrawerTexts, params?: Record<string, any>): string {
   return getLabel(key as any, params)
 }
 
+// Store & State
 const store = useRestifyAiStore()
 const question = ref('')
-const loadingMessage = ref(getLabel('loadingText'))
 const chatContainer = ref<HTMLElement | null>(null)
 const isFullscreen = ref(false)
 const copied = ref(false)
 const showCloseConfirm = ref(false)
 
-// Lazy computed - only evaluated when needed
+// Composables
+const { loadingMessage, startLoadingText, resetLoadingText } = useLoadingText(
+  () => store.sending,
+  () => props.loadingText
+)
+
+const {
+  showHistoryLimitWarning,
+  historyLimitReached,
+  historyLimitDialogTitle,
+  historyLimitDialogMessage,
+  dismissHistoryLimitWarning,
+  handleHistoryLimitAction: handleLimitAction,
+  checkHistoryLimit,
+  setPendingMessage,
+} = useHistoryLimit({
+  getHistoryLength: () => store.chatHistory.length,
+  getStoreLimit: () => store.chatHistoryLimit,
+  getConfig: () => props.historyLimit,
+  getTexts: () => props.texts,
+  onStartNewChat: () => store.clearChatHistory(),
+  onNewChatEmit: () => emit('new-chat'),
+})
+
+// Computed
 const isSetupMode = computed(() => !isConfigured())
 const enableSupportMode = computed(() => getConfigValue('enableSupportMode') ?? false)
 
 const { suggestions, resolvePrompt } = useAiSuggestions()
-
-const setupCode = `import { RestifyAiPlugin } from '@doderasoftware/restify-ai'
-
-app.use(RestifyAiPlugin, {
-  endpoints: {
-    ask: '/api/ai/ask',
-    quota: '/api/ai/quota', // optional
-  },
-  getAuthToken: () => getToken(),
-})`
-
-function copySetupCode() {
-  navigator.clipboard.writeText(setupCode)
-  copied.value = true
-  setTimeout(() => { copied.value = false }, 2000)
-}
 
 const mappedSuggestions = computed(() => {
   if (isSetupMode.value) return []
@@ -486,6 +331,7 @@ const inputSlotProps = computed<InputSlotProps>(() => ({
   onCancel: () => store.cancelRequest(),
 }))
 
+// Actions
 function applySuggestion(suggestion: { id: string; title: string; description: string }) {
   const original = (suggestions.value || []).find((s: AISuggestion) => s.id === suggestion.id)
   if (original) {
@@ -547,24 +393,31 @@ function copyToClipboard(_message: any) {
   // Event bubbled from ChatMessage
 }
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+function copySetupCode() {
+  const code = `import { RestifyAiPlugin } from '@doderasoftware/restify-ai'
+
+app.use(RestifyAiPlugin, {
+  endpoints: {
+    ask: '/api/ai/ask',
+    quota: '/api/ai/quota', // optional
+  },
+  getAuthToken: () => getToken(),
+})`
+  navigator.clipboard.writeText(code)
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 2000)
 }
 
-function resetLoadingText() {
-  loadingMessage.value = getLabel('loadingText')
+// History limit action handler
+async function handleHistoryLimitAction() {
+  const pending = await handleLimitAction()
+  if (pending) {
+    await nextTick()
+    await processSend(pending.message, pending.attachments, pending.mentions, pending.isSupportRequest)
+  }
 }
 
-async function updateLoadingText() {
-  loadingMessage.value = getLabel('loadingText')
-  await delay(2000)
-  if (!store.sending) { resetLoadingText(); return }
-  loadingMessage.value = getLabel('analyzingText')
-  await delay(3000)
-  if (!store.sending) { resetLoadingText(); return }
-  loadingMessage.value = getLabel('craftingText')
-}
-
+// Message handling
 interface InputMention {
   id: string
   name: string
@@ -579,14 +432,21 @@ interface SendPayload {
   isSupportRequest?: boolean
 }
 
+async function processSend(message: string, attachments: ChatAttachment[], mentions: Mention[], isSupportRequest?: boolean) {
+  store.clearError()
+  startLoadingText()
+  await nextTick()
+  scrollToBottom()
+
+  const answered = await store.askQuestion(message, attachments, mentions, isSupportRequest)
+  resetLoadingText()
+
+  if (answered) scrollToBottom()
+}
+
 async function handleSend(payload: SendPayload) {
   const { message, attachments, mentions, isSupportRequest } = payload
   if (store.sending) return
-
-  store.clearError()
-  updateLoadingText()
-  await nextTick()
-  scrollToBottom()
 
   const normalizedMentions: Mention[] = mentions.map(m => ({
     id: m.id,
@@ -595,19 +455,23 @@ async function handleSend(payload: SendPayload) {
     metadata: m.metadata
   }))
 
-  const answered = await store.askQuestion(message, attachments, normalizedMentions, isSupportRequest)
-  resetLoadingText()
+  // Check history limit before sending
+  if (!checkHistoryLimit()) {
+    setPendingMessage({ message, attachments, mentions: normalizedMentions, isSupportRequest })
+    return
+  }
 
-  if (answered) scrollToBottom()
+  await processSend(message, attachments, normalizedMentions, isSupportRequest)
 }
 
 async function handleRetry() {
-  updateLoadingText()
+  startLoadingText()
   const answered = await store.retry()
   resetLoadingText()
   if (answered) scrollToBottom()
 }
 
+// Keyboard handling
 function handleEscapeKey(e: KeyboardEvent) {
   if (!props.closeOnEscape) return
   if (e.key === 'Escape' && modelValue.value) {

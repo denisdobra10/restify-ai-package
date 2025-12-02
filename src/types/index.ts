@@ -2,6 +2,32 @@ import type { Component } from 'vue'
 
 // Core Chat Types
 
+/**
+ * Configuration for chat history limit behavior
+ */
+export interface HistoryLimitConfig {
+  /** Maximum number of messages in chat history */
+  limit: number
+  /** Show warning dialog when remaining messages equals this number */
+  showWarningAt?: number
+  /** Callback when limit is reached, return true to start new chat */
+  onLimitReached?: () => Promise<boolean> | boolean
+  /** Warning message shown when approaching limit */
+  warningMessage?: string
+  /** Message shown when limit is reached */
+  limitMessage?: string
+}
+
+/**
+ * Configuration for dynamic loading text messages
+ */
+export interface LoadingTextConfig {
+  /** Array of messages to cycle through during loading */
+  messages: string[]
+  /** Delay in ms before showing each message (first message shows immediately) */
+  intervals: number[]
+}
+
 export interface ChatAttachment {
   id: string
   name: string
@@ -240,6 +266,13 @@ export interface RestifyAiLabels {
   // Support mode
   toggleSupportMode?: string
   exitSupportMode?: string
+  // History limit
+  historyLimitWarningTitle?: string
+  historyLimitWarningMessage?: string
+  historyLimitReachedTitle?: string
+  historyLimitReachedMessage?: string
+  startNewChat?: string
+  continueChat?: string
   // Setup mode labels
   setupWelcomeTitle?: string
   setupWelcomeDescription?: string
@@ -415,6 +448,10 @@ export interface AiChatDrawerUI {
   errorMessage?: string
   /** Retry button classes */
   retryButton?: string
+  /** History limit warning modal classes */
+  historyLimitModal?: string
+  /** History limit warning button classes */
+  historyLimitButton?: string
 }
 
 /**
@@ -603,6 +640,13 @@ export interface AiChatDrawerTexts {
   keyboardShortcutHint?: string
   placeholder?: string
   supportPlaceholder?: string
+  // History limit texts
+  historyLimitWarningTitle?: string
+  historyLimitWarningMessage?: string
+  historyLimitReachedTitle?: string
+  historyLimitReachedMessage?: string
+  startNewChat?: string
+  continueChat?: string
 }
 
 /**
