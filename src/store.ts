@@ -135,16 +135,16 @@ function loadChatHistory(): LoadedChatState {
         streaming: false,
         loading: false,
       }))
-      
+
       // If sanitization removed messages, save the cleaned history
       if (sanitized.length !== history.length) {
         sessionStorage.setItem(getStorageKey('chatHistory'), JSON.stringify(sanitized))
       }
-      
+
       // Check for orphaned user message (last message is user with no assistant response)
       const lastMessage = sanitized[sanitized.length - 1]
       const hasOrphanedUserMessage = lastMessage?.role === ChatRoles.User
-      
+
       return {
         history: sanitized,
         hasOrphanedUserMessage,
@@ -232,7 +232,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
     const chatState = loadChatHistory()
     const savedError = loadErrorState()
     const config = getRestifyAiConfig()
-    
+
     // Determine initial error state:
     // 1. Use persisted error if available
     // 2. Otherwise, if there's an orphaned user message, create an error for it
@@ -243,7 +243,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       timestamp: null,
       quotaExceeded: false,
     }
-    
+
     if (savedError?.message) {
       initialError = {
         message: savedError.message,
@@ -352,7 +352,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       })
       normalizedAttachments.forEach((a) => this.registerUploadedFile(a))
       saveChatHistory(this.chatHistory)
-      
+
       // Set sending immediately after user message for instant UI feedback
       this.sending = true
 
@@ -578,7 +578,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
             failedAttachments: normalizedAttachments,
             timestamp: Date.now(),
           }
-          
+
           // Persist error state so it survives page refresh
           saveErrorState({
             message: this.error.message,
@@ -627,7 +627,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       }
       const question = this.error.failedQuestion
       const attachments = this.error.failedAttachments || []
-      
+
       // Remove the last user message since askQuestion will add it again
       // This prevents duplicate user messages on retry
       const lastMessage = this.chatHistory[this.chatHistory.length - 1]
@@ -635,7 +635,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
         this.chatHistory.pop()
         saveChatHistory(this.chatHistory)
       }
-      
+
       this.clearError()
       return await this.askQuestion(question, attachments)
     },
