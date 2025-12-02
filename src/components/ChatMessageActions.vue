@@ -1,0 +1,71 @@
+<template>
+  <div 
+    class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+    :class="ui.container"
+  >
+    <button
+      type="button"
+      class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+      :class="[ui.button, ui.copyButton]"
+      :title="copied ? t('copied') : t('copyToClipboard')"
+      @click="handleCopy"
+    >
+      <svg v-if="!copied" class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+      </svg>
+      <svg v-else class="w-4 h-4 text-green-500" :class="ui.successState" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { getLabel } from '../config'
+import type { ChatMessage, ChatMessageActionsUI, ChatMessageActionsTexts } from '../types'
+
+interface Props {
+  message: ChatMessage
+  /** Custom UI classes for styling */
+  ui?: ChatMessageActionsUI
+  /** Custom text overrides for i18n support */
+  texts?: ChatMessageActionsTexts
+}
+
+const props = withDefaults(defineProps<Props>(), {})
+
+const emit = defineEmits<{
+  (e: 'copy', message: ChatMessage): void
+}>()
+
+// Text helper with props fallback
+const t = (key: keyof ChatMessageActionsTexts): string => {
+  if (props.texts?.[key]) {
+    return props.texts[key] as string
+  }
+  const labelMappings: Record<keyof ChatMessageActionsTexts, string> = {
+    copyToClipboard: 'copyToClipboard',
+    copied: 'copied',
+  }
+  return getLabel(labelMappings[key] as any)
+}
+
+// UI class helpers
+const ui = computed(() => props.ui || {})
+
+const copied = ref(false)
+
+async function handleCopy() {
+  try {
+    await navigator.clipboard.writeText(props.message.message)
+    copied.value = true
+    emit('copy', props.message)
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch (err) {
+    console.error('Failed to copy:', err)
+  }
+}
+</script>

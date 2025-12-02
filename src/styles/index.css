@@ -1,0 +1,67 @@
+/* 
+ * Restify AI - Minimal CSS
+ * All styling is done via Tailwind classes.
+ * This file contains only essential animations and utilities
+ * that can't be expressed with Tailwind alone.
+ */
+
+/* Animation for fade-in and slide-up effect */
+@keyframes rai-fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: rai-fade-in-up 0.3s ease-out;
+}
+
+/* Scrollbar styling (can be overridden by consumer) */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(156, 163, 175, 0.5);
+    border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(156, 163, 175, 0.7);
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.5);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 85, 99, 0.7);
+}
+
+/* Firefox scrollbar */
+.scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.dark .scrollbar-thin {
+    scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .animate-in {
+        animation: none;
+    }
+}
