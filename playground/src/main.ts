@@ -126,7 +126,7 @@ app.use(RestifyAiPlugin, {
         aiName: 'AI Assistant',
         emptyStateTitle: 'How can I help you today?',
         emptyStateDescription: 'Ask me anything or select a suggestion below',
-        quotaRemaining: '{count} questions left',
+        quotaRemaining: 'questions left',
     },
 
     // Features

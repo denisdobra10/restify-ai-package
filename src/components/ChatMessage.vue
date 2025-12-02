@@ -80,10 +80,16 @@
 
       <!-- User Avatar -->
       <div 
-        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary"
+        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary overflow-hidden"
         :class="ui.userAvatar"
       >
-        <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor">
+        <img 
+          v-if="userAvatarUrl" 
+          :src="userAvatarUrl" 
+          alt="User" 
+          class="h-full w-full object-cover"
+        />
+        <svg v-else class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="currentColor">
           <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
         </svg>
       </div>
@@ -187,6 +193,7 @@ import { computed, ref } from 'vue'
 import AiAvatar from './AiAvatar.vue'
 import ChatMessageActions from './ChatMessageActions.vue'
 import { useChatMarkdown } from '../composables/useChatMarkdown'
+import { getRestifyAiConfig } from '../config'
 import type { ChatMessage, ChatAttachment, ChatMessageUI, ChatMessageTexts } from '../types'
 
 interface Props {
@@ -248,6 +255,15 @@ function isImage(file: ChatAttachment): boolean {
   if (type.startsWith('image/')) return true
   return /(png|jpe?g|gif|webp)$/i.test(file.name || '')
 }
+
+// Get user avatar from config
+const userAvatarUrl = computed(() => {
+  const config = getRestifyAiConfig()
+  if (!config?.userAvatar) return null
+  if (typeof config.userAvatar === 'string') return config.userAvatar
+  if (typeof config.userAvatar === 'function') return config.userAvatar()
+  return null
+})
 
 function formatFileSize(size?: number | string): string {
   if (size === undefined || size === null) return ''

@@ -680,7 +680,9 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
         })
 
         if (response.ok) {
-          const data = await response.json()
+          const responseData = await response.json()
+          // Handle both { limit, used, remaining } and { data: { limit, used, remaining } }
+          const data = responseData.data ?? responseData
           this.quota = {
             limit: data.limit ?? this.quota.limit,
             used: data.used ?? this.quota.used,

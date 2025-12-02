@@ -330,7 +330,7 @@ export interface RestifyAiConfig {
 
   // Custom components
   assistantAvatar?: any // Allow any component type to avoid Vue version conflicts
-  userAvatar?: any // Allow any component type to avoid Vue version conflicts
+  userAvatar?: string | (() => string | null) // URL string or getter function for user avatar image
 
   // Lifecycle callbacks
   onQuotaFetched?: (quota: ChatQuota) => void

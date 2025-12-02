@@ -35,7 +35,7 @@
           class="text-xs text-green-600 dark:text-green-400"
           :class="ui?.quotaDisplay"
         >
-          {{ t('quotaRemaining', { count: quota.remaining }) }}
+          {{ quota.remaining }} {{ t('quotaRemaining') }}
         </span>
         <span 
           v-else-if="quota.remaining === 0" 
