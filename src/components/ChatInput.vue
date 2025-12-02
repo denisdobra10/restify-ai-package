@@ -186,7 +186,7 @@ interface Mention {
   id: string
   name: string
   type?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, any> | null
 }
 
 interface SubmitPayload {

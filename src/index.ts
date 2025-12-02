@@ -153,6 +153,7 @@ export interface RestifyAiPluginOptions {
   // Features
   keyboardShortcut?: string | null
   enableSupportMode?: boolean
+  canToggle?: () => boolean
 
   // Custom components
   assistantAvatar?: RestifyAiConfig['assistantAvatar']
@@ -181,7 +182,7 @@ export interface RestifyAiPluginOptions {
 }
 
 // Vue plugin
-export const RestifyAiPlugin: Plugin = {
+export const RestifyAiPlugin: Plugin<[RestifyAiPluginOptions]> = {
   install(app: App, options: RestifyAiPluginOptions) {
     if (!options.endpoints || !options.getAuthToken) {
       console.warn('[@doderasoftware/restify-ai] Plugin requires endpoints and getAuthToken options.')
@@ -233,6 +234,7 @@ export const RestifyAiPlugin: Plugin = {
       // Features
       keyboardShortcut: options.keyboardShortcut,
       enableSupportMode: options.enableSupportMode,
+      canToggle: options.canToggle,
 
       // Custom components
       assistantAvatar: options.assistantAvatar,

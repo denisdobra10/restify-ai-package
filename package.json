@@ -12,6 +12,7 @@
             "require": "./dist/restify-ai.umd.cjs",
             "types": "./dist/index.d.ts"
         },
+        "./styles": "./dist/style.css",
         "./tailwind": "./tailwind.config.cjs"
     },
     "files": [

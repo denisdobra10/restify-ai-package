@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, ref } from 'vue'
-import { getConfigValue } from '../config'
+import { getConfigValue, getRestifyAiConfig } from '../config'
 
 export interface UseKeyboardShortcutOptions {
   shortcut?: string | null
@@ -71,6 +71,13 @@ export function useKeyboardShortcut(options: UseKeyboardShortcutOptions) {
     if (matchesShortcut(event, parsedShortcut)) {
       event.preventDefault()
       event.stopPropagation()
+      
+      // Check canToggle permission before toggling
+      const config = getRestifyAiConfig()
+      if (config?.canToggle && !config.canToggle()) {
+        return
+      }
+      
       isActive.value = !isActive.value
       onToggle()
     }

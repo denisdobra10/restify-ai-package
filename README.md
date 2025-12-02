@@ -1,483 +1,514 @@
 # @doderasoftware/restify-ai
 
-A fully customizable Vue 3 AI chatbot component library designed to work with [Laravel Restify](https://restify.binarcode.com/) backends.
+> 🤖 A fully customizable Vue 3 AI chatbot component library with Laravel Restify integration
 
-## Features
+[![npm version](https://img.shields.io/npm/v/@doderasoftware/restify-ai)](https://www.npmjs.com/package/@doderasoftware/restify-ai)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
+[![Vue 3](https://img.shields.io/badge/Vue-3.x-brightgreen)](https://vuejs.org/)
 
-- 🎨 **Fully Customizable** - Theming via CSS custom properties, configurable labels, slot-based component customization
-- 🔌 **Laravel Restify Integration** - Built to work seamlessly with Laravel Restify AI endpoints
-- 📡 **SSE Streaming** - Real-time streaming responses using Server-Sent Events
-- 📎 **File Attachments** - Built-in support for file uploads
-- 💬 **@Mentions** - Pluggable mention provider system for contextual references
-- 💡 **Smart Suggestions** - Page-aware suggestion system with provider registration
-- 🎯 **TypeScript** - Full TypeScript support with exported types
-- 📦 **Tree-shakable** - Import only what you need
+---
 
-## Installation
+## ✨ Features
 
-```bash
+| Feature | Description |
+|---------|-------------|
+| 🔌 **Laravel Restify** | Built for seamless Laravel Restify AI endpoints |
+| 📡 **SSE Streaming** | Real-time streaming responses with Server-Sent Events |
+| 📎 **File Attachments** | Built-in file upload with progress & preview |
+| 💬 **@Mentions** | Pluggable mention providers (employees, projects, etc.) |
+| 💡 **Smart Suggestions** | Route-aware suggestion system |
+| 🎨 **Fully Customizable** | UI classes, texts, slots, themes |
+| ⌨️ **Keyboard Shortcuts** | Configurable shortcuts (e.g., \`Cmd+G\`) |
+| 🔄 **Auto Retry** | Configurable retry logic with exponential backoff |
+| 💾 **Session Persistence** | Chat history survives page refresh |
+| 🌙 **Dark Mode** | Full dark mode support out of the box |
+| 📦 **Tree-shakable** | Import only what you need |
+| 🎯 **TypeScript** | Full TypeScript support |
+
+---
+
+## 📦 Installation
+
+\`\`\`bash
 npm install @doderasoftware/restify-ai
 # or
 pnpm add @doderasoftware/restify-ai
-# or
-yarn add @doderasoftware/restify-ai
-```
+\`\`\`
 
-### Peer Dependencies
+**Peer Dependencies:** \`vue ^3.4\`, \`pinia ^2.1\`
 
-Make sure you have these installed:
+---
 
-```bash
-npm install vue@^3.4.0 pinia@^2.1.0
-```
+## 🚀 Quick Start
 
-## Quick Start
-
-### 1. Register the Plugin
-
-```typescript
+\`\`\`typescript
 // main.ts
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import App from './App.vue'
 import { RestifyAiPlugin } from '@doderasoftware/restify-ai'
-
-// Import base styles (optional, but recommended)
 import '@doderasoftware/restify-ai/styles'
 
 const app = createApp(App)
-
 app.use(createPinia())
+
 app.use(RestifyAiPlugin, {
-  config: {
-    apiEndpoint: '/api/ai/ask',
-    quotaEndpoint: '/api/ai/quota',
-    streamingEnabled: true,
+  endpoints: {
+    ask: '/api/ai/ask',        // Required - SSE streaming endpoint
+    quota: '/api/ai/quota',    // Optional - quota endpoint
+    uploadFile: '/api/ai/upload', // Optional - file upload
   },
-  theme: {
-    primary: '#3b82f6',
-  },
-  labels: {
-    aiName: 'AI Assistant',
-  },
+  getAuthToken: () => localStorage.getItem('token'),
 })
 
 app.mount('#app')
-```
+\`\`\`
 
-### 2. Use Components
-
-```vue
+\`\`\`vue
+<!-- App.vue -->
 <template>
-  <button @click="isOpen = true">Open AI Chat</button>
-  
-  <AiChatDrawer
-    v-model:is-open="isOpen"
-    :messages="messages"
-    :is-loading="isLoading"
-    :suggestions="suggestions"
-    @send="handleSend"
-  />
+  <AiChatDrawer v-model="showChat" />
+  <button @click="showChat = true">Open AI Chat</button>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
-import { AiChatDrawer, useRestifyAiStore } from '@doderasoftware/restify-ai'
-import type { ChatMessage, AiSuggestion, Mention } from '@doderasoftware/restify-ai'
+import { AiChatDrawer } from '@doderasoftware/restify-ai'
 
-const isOpen = ref(false)
-const messages = ref<ChatMessage[]>([])
-const isLoading = ref(false)
-
-const suggestions: AiSuggestion[] = [
-  { id: '1', title: 'Show recent data', prompt: 'Show me recent data' },
-]
-
-const store = useRestifyAiStore()
-
-async function handleSend(payload: { message: string; mentions: Mention[]; attachments: File[] }) {
-  // Add user message
-  messages.value.push({
-    id: `user-${Date.now()}`,
-    role: 'user',
-    message: payload.message,
-    created_at: new Date().toISOString(),
-  })
-
-  // Call your API
-  isLoading.value = true
-  
-  try {
-    await store.askQuestion({
-      message: payload.message,
-      mentions: payload.mentions,
-      attachments: payload.attachments,
-      onMessage: (text) => {
-        // Handle streaming response
-        const lastMessage = messages.value[messages.value.length - 1]
-        if (lastMessage?.role === 'assistant') {
-          lastMessage.message = text
-        } else {
-          messages.value.push({
-            id: `assistant-${Date.now()}`,
-            role: 'assistant',
-            message: text,
-            created_at: new Date().toISOString(),
-          })
-        }
-      },
-    })
-  } finally {
-    isLoading.value = false
-  }
-}
+const showChat = ref(false)
 </script>
-```
+\`\`\`
 
-## Configuration
+---
 
-### Plugin Options
+## ⚙️ Plugin Configuration
 
-```typescript
-interface RestifyAiPluginOptions {
-  config?: Partial<RestifyAiConfig>
-  theme?: Partial<RestifyAiTheme>
-  labels?: Partial<RestifyAiLabels>
+### Required Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| \`endpoints.ask\` | \`string\` | SSE streaming endpoint |
+| \`getAuthToken\` | \`() => string \| Promise<string>\` | Auth token getter |
+
+### API Configuration
+
+\`\`\`typescript
+{
+  baseUrl: 'https://api.example.com',
+  endpoints: {
+    ask: '/api/ai/ask',
+    quota: '/api/ai/quota',
+    uploadFile: '/api/ai/upload',
+  },
+  getAuthToken: () => authStore.token,
+  getCustomHeaders: () => ({
+    'X-CSRF-TOKEN': csrfToken,
+    'X-App-Version': '1.0.0',
+  }),
 }
-```
+\`\`\`
 
-### Config Options
+### Request Customization
 
-```typescript
-interface RestifyAiConfig {
-  // API endpoints
-  apiEndpoint: string
-  quotaEndpoint?: string
+\`\`\`typescript
+{
+  // Modify request payload before sending
+  buildRequest: (payload) => ({
+    ...payload,
+    context: { page: 'dashboard' },
+  }),
   
-  // Streaming
-  streamingEnabled?: boolean
+  // Custom stream parser (default: OpenAI format)
+  parseStreamContent: (data) => JSON.parse(data).content,
   
-  // Request customization
-  headers?: Record<string, string>
-  getAuthToken?: () => string | Promise<string>
-  
-  // Mention provider
-  mentionProvider?: () => Promise<MentionItem[]>
-  
-  // Callbacks
-  onError?: (error: Error) => void
-  onQuotaExhausted?: () => void
+  // Request/response interceptors
+  requestInterceptor: (url, options) => options,
+  responseInterceptor: (response) => response,
 }
-```
+\`\`\`
 
-### Theme Options
+### Retry Configuration
 
-All theme values are applied as CSS custom properties:
-
-```typescript
-interface RestifyAiTheme {
-  primary?: string
-  primaryHover?: string
-  primaryLight?: string
-  bg?: string
-  text?: string
-  textMuted?: string
-  borderColor?: string
-  hoverBg?: string
-  error?: string
-  errorBg?: string
-  success?: string
-  warning?: string
-  codeBg?: string
-  assistantBg?: string
+\`\`\`typescript
+{
+  retry: {
+    maxRetries: 3,
+    retryDelay: 1000, // ms, multiplied by attempt
+    shouldRetry: (error, attempt) => error.status >= 500,
+  },
 }
-```
+\`\`\`
 
-### Labels
+### Providers
 
-All UI text is customizable:
-
-```typescript
-interface RestifyAiLabels {
-  aiName?: string
-  you?: string
-  inputPlaceholder?: string
-  sendMessage?: string
-  attachFile?: string
-  copyToClipboard?: string
-  close?: string
-  emptyStateTitle?: string
-  emptyStateDescription?: string
-  errorGeneric?: string
-  errorNetwork?: string
-  quotaRemaining?: string
+\`\`\`typescript
+{
+  // @Mention providers
+  mentionProviders: [
+    {
+      type: 'employee',
+      label: 'Employees',
+      priority: 10,
+      search: async (query) => api.searchEmployees(query),
+    },
+  ],
+  
+  // Route-aware suggestions
+  suggestionProviders: [
+    {
+      id: 'dashboard',
+      routes: ['/dashboard', '/analytics'],
+      getSuggestions: (context) => [...],
+    },
+  ],
+  
+  // Default suggestions for empty state
+  defaultSuggestions: [
+    { id: '1', title: 'How can you help?', prompt: 'What can you do?' },
+  ],
 }
-```
+\`\`\`
 
-## Components
+### Limits & Storage
 
-### AiChatDrawer
+\`\`\`typescript
+{
+  chatHistoryLimit: 15,           // Max messages
+  maxAttachments: 5,              // Max files per message
+  maxFileSize: 10 * 1024 * 1024,  // 10MB
+  acceptedFileTypes: 'image/*,.pdf,.txt',
+  chatHistoryKey: 'my_chat_history',    // sessionStorage key
+  drawerStateKey: 'my_drawer_state',    // localStorage key
+}
+\`\`\`
 
-The main chat drawer component.
+### Features
 
-```vue
+\`\`\`typescript
+{
+  keyboardShortcut: 'cmd+g',    // null to disable
+  enableSupportMode: true,      // Support request toggle
+}
+\`\`\`
+
+### Custom Components
+
+\`\`\`typescript
+{
+  assistantAvatar: MyAvatarComponent,
+  userAvatar: UserAvatarComponent,
+}
+\`\`\`
+
+### Lifecycle Callbacks
+
+\`\`\`typescript
+{
+  onError: (error) => console.error(error),
+  onQuotaFetched: (quota) => console.log(quota),
+  onMessageSent: (message) => analytics.track('message_sent'),
+  onResponseReceived: (message) => console.log(message),
+  onDrawerToggle: (isOpen) => console.log(isOpen),
+  onNewChat: () => console.log('New chat started'),
+  
+  // Stream hooks
+  onStreamStart: () => console.log('Streaming...'),
+  onStreamEnd: (fullMessage) => console.log('Done'),
+  onStreamChunk: (chunk) => console.log(chunk.content),
+  beforeSend: (payload) => payload,
+  afterResponse: (message) => saveToHistory(message),
+  
+  // File upload hooks
+  onFileUploadStart: (file) => console.log('Uploading', file.name),
+  onFileUploadProgress: (file, progress) => console.log(progress),
+  onFileUploadComplete: (file) => console.log('Done'),
+  onFileUploadError: (file, error) => console.error(error),
+}
+\`\`\`
+
+### Labels / i18n
+
+\`\`\`typescript
+{
+  labels: {
+    aiName: 'My AI Assistant',
+    inputPlaceholder: 'Type your message...',
+    emptyStateTitle: 'How can I help?',
+    // 40+ customizable labels
+  },
+  translate: (key, params) => i18n.t(key, params),
+  can: (permission) => user.hasPermission(permission),
+}
+\`\`\`
+
+---
+
+## 🧩 Components
+
+### \`<AiChatDrawer>\`
+
+Main chat drawer component with all features.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| \`v-model\` | \`boolean\` | - | Drawer visibility |
+| \`width\` | \`string\` | \`'600px'\` | Drawer width |
+| \`fullscreenWidth\` | \`string\` | \`'90vw'\` | Fullscreen width |
+| \`position\` | \`'left' \| 'right'\` | \`'right'\` | Drawer position |
+| \`showBackdrop\` | \`boolean\` | \`false\` | Show backdrop overlay |
+| \`closeOnBackdropClick\` | \`boolean\` | \`false\` | Close on backdrop click |
+| \`closeOnEscape\` | \`boolean\` | \`true\` | Close on Escape key |
+| \`showQuota\` | \`boolean\` | \`true\` | Show quota display |
+| \`showFullscreenToggle\` | \`boolean\` | \`true\` | Show fullscreen button |
+| \`showMinimizeButton\` | \`boolean\` | \`true\` | Show minimize button |
+| \`showCloseButton\` | \`boolean\` | \`true\` | Show close button |
+| \`showNewChatButton\` | \`boolean\` | \`true\` | Show new chat button |
+| \`confirmClose\` | \`boolean\` | \`true\` | Confirm before closing |
+| \`ui\` | \`AiChatDrawerUI\` | - | Custom CSS classes |
+| \`texts\` | \`AiChatDrawerTexts\` | - | Custom text labels |
+| \`historyLimit\` | \`HistoryLimitConfig\` | - | History limit config |
+| \`loadingText\` | \`LoadingTextConfig\` | - | Dynamic loading text |
+
+#### Events
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| \`close\` | - | Drawer closed |
+| \`contact-support\` | - | Support mode triggered |
+| \`new-chat\` | - | New chat started |
+
+#### Slots
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| \`header\` | \`HeaderSlotProps\` | Custom header |
+| \`empty-state\` | \`{ suggestions, onClick }\` | Custom empty state |
+| \`message\` | \`MessageSlotProps\` | Custom message rendering |
+| \`input\` | \`InputSlotProps\` | Custom input |
+| \`quota\` | \`{ quota }\` | Custom quota display |
+| \`setup\` | - | Custom setup guide |
+| \`context-link\` | - | Link above input |
+
+### Other Components
+
+| Component | Description |
+|-----------|-------------|
+| \`<ChatInput>\` | Message input with attachments & mentions |
+| \`<ChatMessage>\` | Single message display |
+| \`<AiEmptyState>\` | Empty state with suggestions |
+| \`<MentionList>\` | @mention dropdown |
+| \`<AiAvatar>\` | AI avatar icon |
+| \`<UserAvatar>\` | User avatar icon |
+| \`<ChatMessageActions>\` | Copy/action buttons |
+
+All components accept \`:ui\` and \`:texts\` props for full customization.
+
+---
+
+## 🎨 UI Customization
+
+Every component accepts a \`:ui\` prop for CSS class overrides:
+
+\`\`\`vue
 <AiChatDrawer
-  v-model:is-open="isOpen"
-  title="AI Assistant"
-  position="right"
-  width="420px"
-  :messages="messages"
-  :is-loading="isLoading"
-  :is-streaming="isStreaming"
-  :suggestions="suggestions"
-  :quota="quota"
-  :close-on-backdrop="true"
-  :close-on-esc="true"
-  @send="handleSend"
-  @suggestion-click="handleSuggestion"
-  @copy="handleCopy"
->
-  <!-- Custom slots -->
-  <template #header>...</template>
-  <template #empty>...</template>
-  <template #message-avatar="{ message }">...</template>
-  <template #input>...</template>
-</AiChatDrawer>
-```
-
-### ChatMessage
-
-Individual message component.
-
-```vue
-<ChatMessage
-  :message="message"
-  :is-streaming="false"
-  :show-actions="true"
-  @copy="handleCopy"
->
-  <template #avatar>...</template>
-  <template #actions="{ message }">...</template>
-  <template #attachment="{ attachment }">...</template>
-</ChatMessage>
-```
-
-### ChatInput
-
-Message input component with file attachments and mentions.
-
-```vue
-<ChatInput
-  v-model="message"
-  placeholder="Ask anything..."
-  :disabled="false"
-  :show-attach-button="true"
-  :show-quota="true"
-  :quota="100"
-  :accepted-file-types=".pdf,.doc,.txt"
-  :max-file-size="10485760"
-  :mention-provider="mentionProvider"
-  @send="handleSend"
-  @attach="handleAttach"
-  @error="handleError"
+  :ui="{
+    drawer: 'my-drawer-class',
+    header: 'my-header-class',
+    body: 'my-body-class',
+  }"
+  :texts="{
+    title: 'My AI',
+    placeholder: 'Ask anything...',
+  }"
 />
-```
+\`\`\`
 
-### AiEmptyState
+### Available UI Props
 
-Empty state with suggestions.
+- \`AiChatDrawerUI\` - backdrop, drawer, panel, header, body, etc.
+- \`ChatInputUI\` - root, textarea, sendButton, attachButton, etc.
+- \`ChatMessageUI\` - userBubble, assistantBubble, loadingDots, etc.
+- \`AiEmptyStateUI\` - grid, suggestionCard, title, etc.
+- \`MentionListUI\` - item, itemSelected, groupHeader, etc.
 
-```vue
-<AiEmptyState
-  :suggestions="suggestions"
-  @suggestion-click="handleClick"
->
-  <template #icon>...</template>
-  <template #title>How can I help?</template>
-  <template #description>Ask me anything about your data.</template>
-</AiEmptyState>
-```
+---
 
-## Composables
+## 📚 Composables
 
-### useRestifyAiStore
+\`\`\`typescript
+import {
+  useRestifyAiStore,      // Pinia store
+  useAiSuggestions,       // Suggestions management
+  useAiContext,           // Page context
+  usePageAiContext,       // Route-based context
+  useKeyboardShortcut,    // Custom shortcuts
+  useAiDrawerShortcut,    // Drawer toggle shortcut
+  useMentionParsing,      // Parse @mentions
+  useChatMarkdown,        // Markdown rendering
+  useChatScroll,          // Auto-scroll
+  useChatErrorHandling,   // Error management
+  useLoadingText,         // Dynamic loading messages
+  useHistoryLimit,        // History limit dialogs
+} from '@doderasoftware/restify-ai'
+\`\`\`
 
-Pinia store for chat state management.
+### Store Actions
 
-```typescript
+\`\`\`typescript
 const store = useRestifyAiStore()
 
-// State
-store.messages
-store.isLoading
-store.isStreaming
-store.error
-store.quota
-
-// Actions
-await store.askQuestion({ message, mentions, attachments, onMessage })
-await store.fetchQuota()
-store.clearMessages()
+store.askQuestion(question, attachments, mentions)
+store.cancelRequest()
+store.retry()
+store.clearChatHistory()
 store.clearError()
-```
+store.fetchQuota()
+store.toggleSupportMode()
+\`\`\`
 
-### useMentionParsing
+### Store State
 
-Parse @mentions from message text.
+\`\`\`typescript
+store.chatHistory      // ChatMessage[]
+store.sending          // boolean
+store.error            // ChatError
+store.quota            // ChatQuota
+store.showChat         // boolean
+store.isFullscreen     // boolean
+store.supportRequestMode // boolean
+\`\`\`
 
-```typescript
-const { extractMentions, parseAndCleanMessage, formatMentionsForApi } = useMentionParsing()
+---
 
-const mentions = extractMentions('@[John Doe](user:123) hello')
-// [{ id: 'user:123', label: 'John Doe' }]
+## 🔧 Advanced Features
 
-const clean = parseAndCleanMessage('@[John Doe](user:123) hello')
-// 'John Doe hello'
-```
+### History Limit Dialog
 
-### useChatMarkdown
+\`\`\`vue
+<AiChatDrawer
+  :history-limit="{
+    limit: 20,
+    showWarningAt: 3,
+    warningMessage: 'Almost at limit!',
+    limitMessage: 'Start a new chat to continue.',
+  }"
+/>
+\`\`\`
 
-Parse markdown content safely.
+### Dynamic Loading Text
 
-```typescript
-const { parseMarkdown } = useChatMarkdown()
+\`\`\`vue
+<AiChatDrawer
+  :loading-text="{
+    messages: ['Thinking...', 'Analyzing...', 'Almost done...'],
+    intervals: [0, 2000, 4000],
+  }"
+/>
+\`\`\`
 
-const html = parseMarkdown('**Hello** world')
-// '<p><strong>Hello</strong> world</p>'
-```
+### Keyboard Shortcut
 
-### useAiSuggestions
+\`\`\`typescript
+// Plugin config
+{ keyboardShortcut: 'cmd+shift+a' }
 
-Get page-aware suggestions.
+// Or use composable
+const { toggle } = useAiDrawerShortcut()
+\`\`\`
 
-```typescript
-const { suggestions, isLoading, refreshSuggestions } = useAiSuggestions()
-```
+---
 
-## Suggestion Providers
+## 📡 Laravel Restify Backend
 
-Register page-specific suggestions:
+Expected SSE endpoint format:
 
-```typescript
-import { registerSuggestionProvider } from '@doderasoftware/restify-ai'
-
-registerSuggestionProvider({
-  id: 'orders',
-  pathPattern: /^\/orders/,
-  priority: 10,
-  async getSuggestions(context) {
-    return [
-      { id: '1', title: 'Show recent orders', prompt: '...' },
-      { id: '2', title: 'Order statistics', prompt: '...' },
-    ]
-  },
-})
-```
-
-## Mention Providers
-
-Implement custom mention providers:
-
-```typescript
-const mentionProvider = async (): Promise<MentionItem[]> => {
-  const users = await fetchUsers()
-  return users.map(user => ({
-    id: `user:${user.id}`,
-    label: user.name,
-    type: 'user',
-    meta: { avatar: user.avatar },
-  }))
-}
-
-// Pass to config or component
-<ChatInput :mention-provider="mentionProvider" />
-```
-
-## Styling
-
-### CSS Custom Properties
-
-Override any CSS variable:
-
-```css
-:root {
-  --rai-primary: #6366f1;
-  --rai-primary-hover: #4f46e5;
-  --rai-bg: #ffffff;
-  --rai-text: #1f2937;
-  /* ... see styles/index.css for full list */
-}
-```
-
-### Dark Mode
-
-The library supports automatic dark mode via `prefers-color-scheme` or `.dark` class:
-
-```css
-.dark {
-  --rai-bg: #1f2937;
-  --rai-text: #f9fafb;
-  /* ... */
-}
-```
-
-### Tailwind CSS
-
-Use the included preset for Tailwind integration:
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  presets: [require('@doderasoftware/restify-ai/tailwind.preset.cjs')],
-}
-```
-
-## Laravel Restify Backend
-
-This package is designed to work with Laravel Restify. Here's a typical backend setup:
-
-```php
+\`\`\`php
 // routes/api.php
 Route::post('/ai/ask', [AiController::class, 'ask']);
 Route::get('/ai/quota', [AiController::class, 'quota']);
+\`\`\`
 
+\`\`\`php
 // AiController.php
 public function ask(Request $request)
 {
     return response()->stream(function () use ($request) {
-        // Your AI logic with SSE streaming
-        foreach ($chunks as $chunk) {
-            echo "data: " . json_encode(['text' => $chunk]) . "\n\n";
-            ob_flush();
-            flush();
-        }
+        // Stream OpenAI-format chunks
+        echo "data: " . json_encode([
+            'choices' => [['delta' => ['content' => 'Hello']]]
+        ]) . "\n\n";
+        ob_flush();
+        flush();
+        
+        echo "data: [DONE]\n\n";
     }, 200, [
         'Content-Type' => 'text/event-stream',
         'Cache-Control' => 'no-cache',
-        'Connection' => 'keep-alive',
+        'X-Accel-Buffering' => 'no',
     ]);
 }
-```
+\`\`\`
 
-## TypeScript
+---
+
+## 📝 TypeScript Types
 
 All types are exported:
 
-```typescript
+\`\`\`typescript
 import type {
   ChatMessage,
   ChatAttachment,
   Mention,
-  MentionItem,
   MentionProvider,
-  AiSuggestion,
   SuggestionProvider,
+  AISuggestion,
   RestifyAiConfig,
-  RestifyAiTheme,
-  RestifyAiLabels,
+  ChatQuota,
+  ChatError,
+  // UI types
+  AiChatDrawerUI,
+  ChatInputUI,
+  ChatMessageUI,
+  // Text types
+  AiChatDrawerTexts,
+  ChatInputTexts,
+  // Config types
+  HistoryLimitConfig,
+  LoadingTextConfig,
+  RetryConfig,
+  // Hook types
+  BeforeSendHook,
+  AfterResponseHook,
+  StreamParserFunction,
 } from '@doderasoftware/restify-ai'
-```
+\`\`\`
 
-## License
+---
 
-MIT © [Dodera Software](https://doderasoftware.com)
+## 📋 Quick Reference
+
+| Feature | Configuration |
+|---------|---------------|
+| SSE Streaming | Built-in, automatic |
+| Keyboard Shortcut | \`keyboardShortcut: 'cmd+g'\` |
+| @Mentions | \`mentionProviders: [...]\` |
+| Route Suggestions | \`suggestionProviders: [...]\` |
+| File Attachments | \`endpoints.uploadFile\` + \`maxAttachments\` |
+| Support Mode | \`enableSupportMode: true\` |
+| Custom Headers | \`getCustomHeaders: () => ({...})\` |
+| Auth Token | \`getAuthToken: () => token\` |
+| Base URL | \`baseUrl: 'https://api.example.com'\` |
+| Error Handling | \`onError: (err) => {...}\` |
+| Retry Logic | \`retry: { maxRetries: 3 }\` |
+| UI Customization | \`:ui\` prop on all components |
+| Text/i18n | \`:texts\` prop + \`labels\` config |
+| History Limit | \`:history-limit\` prop |
+| Loading Messages | \`:loading-text\` prop |
+
+---
+
+## 📄 License
+
+MIT © [Dodera Software](https://github.com/doderasoftware)

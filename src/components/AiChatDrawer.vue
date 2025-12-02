@@ -14,12 +14,12 @@
     <Transition :name="position === 'left' ? 'rai-slide-right' : 'rai-slide-left'">
       <aside
         v-if="modelValue"
-        class="fixed top-0 bottom-0 z-50 flex-shrink-0 h-full border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl will-change-transform"
+        class="fixed bottom-0 z-50 flex-shrink-0 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl will-change-transform"
         :class="[
           position === 'left' ? 'left-0 border-r' : 'right-0 border-l',
           ui?.drawer
         ]"
-        :style="{ width: isFullscreen ? fullscreenWidth : width }"
+        :style="{ width: isFullscreen ? fullscreenWidth : width, top: topOffset, height: `calc(100vh - ${topOffset})` }"
       >
         <div 
           class="h-full flex flex-col relative bg-white dark:bg-gray-900"
@@ -191,6 +191,7 @@ interface Props {
   texts?: AiChatDrawerTexts
   width?: string
   fullscreenWidth?: string
+  topOffset?: string
   position?: 'left' | 'right'
   showBackdrop?: boolean
   closeOnBackdropClick?: boolean
@@ -203,11 +204,13 @@ interface Props {
   confirmClose?: boolean
   historyLimit?: HistoryLimitConfig
   loadingText?: LoadingTextConfig
+  autoFetchQuota?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: '600px',
   fullscreenWidth: '90vw',
+  topOffset: '0',
   position: 'right',
   showBackdrop: false,
   closeOnBackdropClick: false,
@@ -218,6 +221,7 @@ const props = withDefaults(defineProps<Props>(), {
   showCloseButton: true,
   showNewChatButton: true,
   confirmClose: true,
+  autoFetchQuota: true,
 })
 
 const emit = defineEmits<{
@@ -422,7 +426,7 @@ interface InputMention {
   id: string
   name: string
   type?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, any> | null
 }
 
 interface SendPayload {
@@ -482,6 +486,13 @@ function handleEscapeKey(e: KeyboardEvent) {
     }
   }
 }
+
+// Auto-fetch quota when drawer opens
+watch(() => props.modelValue, (isOpen) => {
+  if (isOpen && props.autoFetchQuota) {
+    store.fetchQuota()
+  }
+}, { immediate: true })
 
 onMounted(() => {
   window.addEventListener('keydown', handleEscapeKey)

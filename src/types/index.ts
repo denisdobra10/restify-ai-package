@@ -44,7 +44,7 @@ export interface Mention {
   id: string
   name: string
   type: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, any> | null
 }
 
 export const ChatRoles = {
@@ -110,7 +110,7 @@ export interface AISuggestion {
   id: string
   title: string
   description?: string
-  icon?: Component
+  icon?: any // Allow any component type to avoid Vue version conflicts
   className?: string
   gradientClass?: string
   prompt: string | ((context: PageContext) => string)
@@ -136,7 +136,7 @@ export interface SuggestionProvider {
 export interface MentionProvider {
   type: string
   label: string
-  icon?: Component
+  icon?: any // Allow any component type to avoid Vue version conflicts
   iconClass?: string
   search: (query: string) => Promise<MentionItem[]> | MentionItem[]
   routes?: string[]
@@ -152,8 +152,8 @@ export interface MentionItem {
   name?: string
   label?: string
   title?: string
-  attributes?: Record<string, any>
-  relationships?: Record<string, any>
+  attributes?: Record<string, any> | null
+  relationships?: Record<string, any> | null
 }
 
 export interface MentionContext {
@@ -326,10 +326,11 @@ export interface RestifyAiConfig {
   // Features
   keyboardShortcut?: string | null
   enableSupportMode?: boolean
+  canToggle?: () => boolean
 
   // Custom components
-  assistantAvatar?: Component
-  userAvatar?: Component
+  assistantAvatar?: any // Allow any component type to avoid Vue version conflicts
+  userAvatar?: any // Allow any component type to avoid Vue version conflicts
 
   // Lifecycle callbacks
   onQuotaFetched?: (quota: ChatQuota) => void

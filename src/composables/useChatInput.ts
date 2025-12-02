@@ -213,7 +213,7 @@ export function useMentionInput(
     const mentionItems = ref<MentionItem[]>([])
     const selectedMentionIndex = ref(0)
     const mentionContext = ref({ inMention: false, query: '', startPos: 0 })
-    const insertedMentions = ref<{ id: string; name: string; type?: string; metadata?: Record<string, any> }[]>([])
+    const insertedMentions = ref<{ id: string; name: string; type?: string; metadata?: Record<string, any> | null }[]>([])
 
     const mentionProviders = computed<MentionProvider[]>(() => {
         const config = getRestifyAiConfig()
