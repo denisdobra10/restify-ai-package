@@ -72,7 +72,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
     }
 
     return {
-      chatHistoryLimit: getConfigValue('chatHistoryLimit') || 15,
+      chatHistoryLimit: getConfigValue("chatHistoryLimit") || 20,
       chatHistory: chatState.history,
       uploadedFiles: extractUploadedFiles(chatState.history),
       loading: false,

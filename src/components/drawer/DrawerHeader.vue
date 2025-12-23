@@ -43,26 +43,83 @@
       </div>
     </div>
 
-    <!-- Quota Display -->
+    <!-- Message Count & Quota Display -->
     <div
-      v-if="showQuota && !isSetupMode"
-      class="flex items-center gap-2 ml-auto mr-3"
+      v-if="!isSetupMode && (showMessageCount || showQuota)"
+      class="flex items-center gap-2 ml-auto mr-4"
     >
-      <slot name="quota">
+      <!-- Message Count Badge -->
+      <div 
+        v-if="showMessageCount && hasHistory"
+        class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800"
+        :class="ui?.messageCountBadge"
+      >
+        <svg 
+          class="w-3.5 h-3.5" 
+          :class="messageCountIconClass"
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+          />
+        </svg>
         <span 
+          class="text-xs font-medium tabular-nums"
+          :class="messageCountClass"
+        >
+          <slot name="message-count">
+            {{ messageCount }}<span class="text-gray-400 dark:text-gray-500">/</span>{{ messageLimit }}
+          </slot>
+        </span>
+      </div>
+
+      <!-- Separator -->
+      <span 
+        v-if="showMessageCount && hasHistory && showQuota && quota.remaining >= 0" 
+        class="text-gray-300 dark:text-gray-600"
+      >
+        •
+      </span>
+
+      <!-- Quota Display -->
+      <slot
+        v-if="showQuota"
+        name="quota"
+      >
+        <div 
           v-if="quota.remaining > 0" 
-          class="text-xs text-green-600 dark:text-green-400"
+          class="flex items-center gap-1.5 text-xs"
           :class="ui?.quotaDisplay"
         >
-          {{ quota.remaining }} {{ t('quotaRemaining') }}
-        </span>
-        <span 
+          <span class="text-green-600 dark:text-green-400 font-medium tabular-nums">{{ quota.remaining }}</span>
+          <span class="text-gray-500 dark:text-gray-400">{{ t('quotaRemaining') }}</span>
+        </div>
+        <div 
           v-else-if="quota.remaining === 0" 
-          class="text-xs text-red-600 dark:text-red-400"
-          :class="ui?.quotaDisplay"
+          class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 dark:bg-red-900/20"
         >
-          {{ t('noQuota') }}
-        </span>
+          <svg
+            class="w-3.5 h-3.5 text-red-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+            />
+          </svg>
+          <span class="text-xs text-red-600 dark:text-red-400 font-medium">
+            {{ t('noQuota') }}
+          </span>
+        </div>
       </slot>
     </div>
 
@@ -158,6 +215,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { AiChatDrawerUI, AiChatDrawerTexts, ChatQuota } from '../../types'
 
 interface Props {
@@ -171,10 +229,13 @@ interface Props {
   showMinimizeButton: boolean
   showFullscreenToggle: boolean
   isFullscreen: boolean
+  showMessageCount: boolean
+  messageCount: number
+  messageLimit: number
   t: (key: keyof AiChatDrawerTexts, params?: Record<string, any>) => string
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 defineEmits<{
   (e: 'new-chat'): void
@@ -182,4 +243,26 @@ defineEmits<{
   (e: 'minimize'): void
   (e: 'toggle-fullscreen'): void
 }>()
+
+const messageCountClass = computed(() => {
+  const ratio = props.messageCount / props.messageLimit
+  if (ratio >= 1) {
+    return 'text-red-600 dark:text-red-400'
+  }
+  if (ratio >= 0.8) {
+    return 'text-amber-600 dark:text-amber-400'
+  }
+  return 'text-gray-600 dark:text-gray-300'
+})
+
+const messageCountIconClass = computed(() => {
+  const ratio = props.messageCount / props.messageLimit
+  if (ratio >= 1) {
+    return 'text-red-500 dark:text-red-400'
+  }
+  if (ratio >= 0.8) {
+    return 'text-amber-500 dark:text-amber-400'
+  }
+  return 'text-gray-400 dark:text-gray-500'
+})
 </script>

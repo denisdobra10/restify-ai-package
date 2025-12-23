@@ -25,6 +25,7 @@ export interface AiChatDrawerTexts {
   historyLimitReachedMessage?: string
   startNewChat?: string
   continueChat?: string
+  messageCount?: string
 }
 
 export interface ChatInputTexts {

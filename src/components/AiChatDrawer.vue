@@ -41,6 +41,9 @@
               :show-minimize-button="showMinimizeButton"
               :show-fullscreen-toggle="showFullscreenToggle"
               :is-fullscreen="isFullscreen"
+              :show-message-count="showMessageCount"
+              :message-count="userMessageCount"
+              :message-limit="store.chatHistoryLimit"
               :t="t"
               @new-chat="startNewChat"
               @close="handleClose"
@@ -219,6 +222,7 @@ interface Props {
   closeOnBackdropClick?: boolean
   closeOnEscape?: boolean
   showQuota?: boolean
+  showMessageCount?: boolean
   showFullscreenToggle?: boolean
   showMinimizeButton?: boolean
   showCloseButton?: boolean
@@ -238,6 +242,7 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnBackdropClick: false,
   closeOnEscape: true,
   showQuota: true,
+  showMessageCount: true,
   showFullscreenToggle: true,
   showMinimizeButton: true,
   showCloseButton: true,
@@ -312,6 +317,10 @@ const enableSupportMode = computed(() => getConfigValue('enableSupportMode') ?? 
 
 const { suggestions, resolvePrompt } = useAiSuggestions()
 
+// Count only user messages for the limit display
+const userMessageCount = computed(() => {
+  return store.chatHistory.filter((m: any) => m.role === "user").length
+})
 const mappedSuggestions = computed(() => {
   if (isSetupMode.value) return []
   
@@ -510,6 +519,21 @@ function handleEscapeKey(e: KeyboardEvent) {
 }
 
 // Auto-fetch quota when drawer opens
+// Auto-scroll to bottom when new messages are added
+watch(
+  () => store.chatHistory.length,
+  () => {
+    scrollToBottom()
+  }
+)
+
+// Also scroll when streaming content updates
+watch(
+  () => store.chatHistory.map((m: any) => m.message).join(""),
+  () => {
+    scrollToBottom()
+  }
+)
 watch(() => props.modelValue, (isOpen) => {
   if (isOpen && props.autoFetchQuota) {
     store.fetchQuota()

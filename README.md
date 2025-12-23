@@ -254,7 +254,7 @@ export function setupRestifyAi(app: App) {
     // LIMITS
     // ═══════════════════════════════════════════════════════════════
     
-    chatHistoryLimit: 15,
+    chatHistoryLimit: 20,  // Maximum user messages per conversation
     maxAttachments: 5,
     maxFileSize: 10 * 1024 * 1024, // 10MB
     acceptedFileTypes: 'image/*,.pdf,.txt,.doc,.docx,.xls,.xlsx,.csv',
@@ -320,7 +320,8 @@ export function setupRestifyAi(app: App) {
 | `showBackdrop` | `boolean` | `false` | Show backdrop overlay |
 | `closeOnBackdropClick` | `boolean` | `false` | Close when clicking backdrop |
 | `closeOnEscape` | `boolean` | `true` | Close on Escape key |
-| `showQuota` | `boolean` | `true` | Show quota display |
+| `showQuota` | `boolean` | `true` | Show quota display (API usage remaining) |
+| `showMessageCount` | `boolean` | `true` | Show message count badge (X/20 format) |
 | `showFullscreenToggle` | `boolean` | `true` | Show fullscreen button |
 | `showMinimizeButton` | `boolean` | `true` | Show minimize button |
 | `showCloseButton` | `boolean` | `true` | Show close button |
@@ -786,6 +787,7 @@ interface AiChatDrawerUI {
   body?: string                  // Messages container
   footer?: string                // Footer container
   quotaDisplay?: string          // Quota display
+  messageCountBadge?: string     // Message count badge
   newChatButton?: string         // New chat button
   errorContainer?: string        // Error container
   errorMessage?: string          // Error message

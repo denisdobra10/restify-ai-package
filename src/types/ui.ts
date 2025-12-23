@@ -16,6 +16,7 @@ export interface AiChatDrawerUI {
   closeConfirmButton?: string
   cancelButton?: string
   quotaDisplay?: string
+  messageCountBadge?: string
   newChatButton?: string
   errorContainer?: string
   errorMessage?: string
