@@ -1,34 +1,48 @@
-# Dependencies
-node_modules/
-
 # Source files (only dist is needed)
 src/
 playground/
 
-# Config files
-*.config.ts
-*.config.js
-tsconfig.json
+# Config files not needed in package
+vite.config.ts
 postcss.config.js
+tsconfig.json
 .eslintrc.*
 .prettierrc.*
+.editorconfig
 
-# Development files
-*.md
-!README.md
-.gitignore
-.git/
-
-# Test files
+# Development and test files
 *.test.ts
 *.spec.ts
 __tests__/
 coverage/
+.vitest/
 
-# IDE
+# Git and IDE
+.git/
+.gitignore
 .vscode/
 .idea/
 
-# OS
+# Documentation (keep README)
+USAGE.md
+CHANGELOG.md
+*.bak
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Tailwind config files (keep .cjs export version)
+tailwind.config.js
+tailwind.config.ts
+tailwind.preset.cjs
+
+# Misc
+*.log
+*.tmp
+.env*
