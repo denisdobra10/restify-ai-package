@@ -1,79 +1,41 @@
-<div align="center">
-  <h1>🤖 Restify AI</h1>
-  <p><strong>Professional AI Chatbot Component for Vue 3 + Laravel Restify</strong></p>
-  <p>Build intelligent, context-aware AI assistants that integrate seamlessly with your Laravel backend</p>
+# @doderasoftware/restify-ai
 
-  <a href="https://www.npmjs.com/package/@doderasoftware/restify-ai"><img src="https://img.shields.io/npm/v/@doderasoftware/restify-ai.svg?style=flat-square" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/@doderasoftware/restify-ai"><img src="https://img.shields.io/npm/dm/@doderasoftware/restify-ai.svg?style=flat-square" alt="npm downloads"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License: MIT"></a>
-  <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue-3.x-brightgreen.svg?style=flat-square" alt="Vue 3"></a>
-  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.x-blue.svg?style=flat-square" alt="TypeScript"></a>
-  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/TailwindCSS-3.x-38bdf8.svg?style=flat-square" alt="TailwindCSS"></a>
+A production-ready AI chatbot component for Vue 3 with real-time SSE streaming, file attachments, @mentions, and seamless Laravel Restify integration.
 
-  <br /><br />
+[![npm version](https://img.shields.io/npm/v/@doderasoftware/restify-ai.svg)](https://www.npmjs.com/package/@doderasoftware/restify-ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Vue 3](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38bdf8.svg)](https://tailwindcss.com/)
 
-  <a href="https://laravel-restify.com">Laravel Restify</a> •
-  <a href="https://binarcode.com">BinarCode</a> •
-  <a href="#features">Features</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#configuration">Configuration</a>
-</div>
+**📖 [Laravel Restify](https://laravel-restify.com) | 📦 [npm](https://www.npmjs.com/package/@doderasoftware/restify-ai) | 🏢 [BinarCode](https://binarcode.com)**
 
----
+## ✨ Features
 
-## Overview
+- 🌊 **Real-time SSE Streaming** - Smooth character-by-character response streaming
+- 📎 **File Attachments** - Upload and process documents, images, and more
+- 👥 **@Mentions System** - Reference entities from your application (users, documents, etc.)
+- 💡 **Context-Aware Suggestions** - Smart prompts based on current page/route
+- 💬 **Chat History** - Persistent conversation memory with configurable limits
+- 📝 **Markdown Rendering** - Beautiful formatting with syntax highlighting
+- 📊 **Quota Management** - Track and display API usage limits
+- 🎨 **Fully Customizable** - Override any style with Tailwind CSS classes
+- 🌙 **Dark Mode Support** - Automatic dark/light theme detection
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- ⌨️ **Keyboard Shortcuts** - Quick access with configurable shortcuts (Cmd/Ctrl+G)
+- 🔳 **Fullscreen Mode** - Expandable chat interface
+- 🎯 **TypeScript First** - Full type definitions included
+- 🗃️ **Pinia Integration** - State management built-in
+- 🔧 **Slot-Based Customization** - Override any component section
+- 🌐 **i18n Ready** - Full internationalization support
+- 🆘 **Support Mode** - Route conversations to human agents
+- 🔄 **Retry Logic** - Automatic retry with configurable backoff
+- ⚠️ **Error Handling** - User-friendly error messages
 
-**Restify AI** is a production-ready Vue 3 component library that provides a fully-featured AI chatbot interface designed to work seamlessly with [Laravel Restify](https://laravel-restify.com) backends. Built by [BinarCode](https://binarcode.com), the team behind Laravel Restify, this package enables you to add powerful AI capabilities to your Vue.js applications in minutes.
-
-Whether you are building a customer support system, an intelligent assistant for your SaaS application, or an AI-powered admin panel, Restify AI provides all the building blocks you need.
-
-## Features
-
-### 🎯 Core Features
-- **Real-time SSE Streaming** - Smooth, character-by-character response streaming
-- **File Attachments** - Upload and process documents, images, and more
-- **@Mentions System** - Reference entities from your application (users, documents, etc.)
-- **Context-Aware Suggestions** - Smart prompts based on current page/route
-- **Chat History** - Persistent conversation memory with configurable limits
-- **Markdown Rendering** - Beautiful formatting with syntax highlighting
-- **Quota Management** - Track and display API usage limits
-
-### 🎨 UI/UX
-- **Fully Customizable** - Override any style with Tailwind CSS classes
-- **Dark Mode Support** - Automatic dark/light theme detection
-- **Responsive Design** - Works on desktop, tablet, and mobile
-- **Keyboard Shortcuts** - Quick access with configurable shortcuts (Cmd/Ctrl+G)
-- **Fullscreen Mode** - Expandable chat interface
-- **Animations** - Smooth transitions and loading states
-- **Customizable Avatars** - Use custom components or images
-
-### 🔧 Developer Experience
-- **TypeScript First** - Full type definitions included
-- **Vue 3 Composition API** - Modern Vue patterns
-- **Pinia Integration** - State management built-in
-- **Slot-Based Customization** - Override any component section
-- **Lifecycle Hooks** - Tap into every stage of the chat flow
-- **i18n Ready** - Full internationalization support
-
-### 🔒 Enterprise Ready
-- **Support Mode** - Route conversations to human agents
-- **Permission System** - Control features based on user permissions
-- **Request/Response Interceptors** - Customize API communication
-- **Retry Logic** - Automatic retry with configurable backoff
-- **Error Handling** - User-friendly error messages
-
-## Installation
+## 📦 Installation
 
 ```bash
-# npm
 npm install @doderasoftware/restify-ai
-
-# yarn
-yarn add @doderasoftware/restify-ai
-
-# pnpm
-pnpm add @doderasoftware/restify-ai
 ```
 
 ### Peer Dependencies
@@ -82,7 +44,7 @@ pnpm add @doderasoftware/restify-ai
 npm install vue@^3.3.0 pinia@^2.1.0 tailwindcss@^3.3.0
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
 ### 1. Configure Tailwind CSS
 
@@ -169,7 +131,7 @@ import { useAiDrawerShortcut } from "@doderasoftware/restify-ai"
 useAiDrawerShortcut()
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 ### Full Configuration Options
 
@@ -200,16 +162,20 @@ app.use(RestifyAiPlugin, {
     loadingText: "Thinking...",
   },
 
-  // PROVIDERS
+  // MENTION PROVIDERS
   mentionProviders: [{
     type: "user",
     label: "Users",
-    search: async (q) => api.searchUsers(q),
+    search: async (query) => api.searchUsers(query),
   }],
+
+  // SUGGESTION PROVIDERS
   suggestionProviders: [{
     id: "invoices",
     routes: ["/invoices/*"],
-    getSuggestions: (ctx) => [{ id: "1", title: "Create Invoice", prompt: "Help me create an invoice" }],
+    getSuggestions: (ctx) => [
+      { id: "1", title: "Create Invoice", prompt: "Help me create an invoice" }
+    ],
   }],
 
   // THEMING
@@ -228,7 +194,7 @@ app.use(RestifyAiPlugin, {
   keyboardShortcut: "cmd+g",
   enableSupportMode: true,
 
-  // CUSTOM COMPONENTS
+  // CUSTOM AVATARS
   assistantAvatar: CustomAvatarComponent,
   userAvatar: () => currentUser.value?.avatarUrl,
 
@@ -240,9 +206,59 @@ app.use(RestifyAiPlugin, {
 })
 ```
 
-## Component API
+## 🎨 UI Customization
 
-### AiChatDrawer Props
+The `:ui` prop allows complete control over every element's styling:
+
+```vue
+<AiChatDrawer
+  v-model="isOpen"
+  :ui="{
+    backdrop: 'bg-black/50 backdrop-blur-sm',
+    drawer: 'shadow-2xl',
+    panel: 'bg-gray-50 dark:bg-gray-900',
+    header: 'border-b-2 border-blue-500',
+    newChatButton: 'bg-gradient-to-r from-blue-500 to-purple-500',
+  }"
+/>
+```
+
+### Available UI Keys - AiChatDrawer
+
+| Key | Description |
+|-----|-------------|
+| `backdrop` | Backdrop overlay |
+| `drawer` | Drawer container |
+| `panel` | Inner panel |
+| `header` | Header container |
+| `headerTitle` | Header title text |
+| `body` | Chat body area |
+| `footer` | Footer container |
+| `newChatButton` | New chat button |
+| `errorContainer` | Error message container |
+| `retryButton` | Retry button |
+
+### Available UI Keys - ChatInput
+
+| Key | Description |
+|-----|-------------|
+| `root` | Input root container |
+| `textarea` | Textarea element |
+| `sendButton` | Send button |
+| `attachButton` | Attachment button |
+| `suggestionsDropdown` | Suggestions dropdown |
+
+### Available UI Keys - ChatMessage
+
+| Key | Description |
+|-----|-------------|
+| `root` | Message root container |
+| `userBubble` | User message bubble |
+| `assistantBubble` | Assistant message bubble |
+| `content` | Message content |
+| `loadingDots` | Loading animation dots |
+
+## 📋 Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -258,7 +274,7 @@ app.use(RestifyAiPlugin, {
 | `ui` | `AiChatDrawerUI` | `{}` | Custom CSS classes |
 | `texts` | `AiChatDrawerTexts` | `{}` | Custom text labels |
 
-### Events
+## 📡 Events
 
 | Event | Payload | Description |
 |-------|---------|-------------|
@@ -267,7 +283,14 @@ app.use(RestifyAiPlugin, {
 | `contact-support` | - | Support mode activated |
 | `new-chat` | - | New chat started |
 
-### Slots
+## 🎰 Slots
+
+| Slot | Props | Description |
+|------|-------|-------------|
+| `header` | `{ quota, isFullscreen, onNewChat, onClose }` | Custom header |
+| `empty-state` | `{ suggestions, onClick }` | Custom empty state |
+| `message` | `{ message, isUser, isLoading }` | Custom message bubble |
+| `input` | `{ modelValue, sending, onSubmit }` | Custom input area |
 
 ```vue
 <AiChatDrawer v-model="isOpen">
@@ -286,57 +309,7 @@ app.use(RestifyAiPlugin, {
 </AiChatDrawer>
 ```
 
-## UI Customization
-
-Every component accepts a `ui` prop for CSS class customization:
-
-```vue
-<AiChatDrawer
-  v-model="isOpen"
-  :ui="{
-    backdrop: "bg-black/50 backdrop-blur-sm",
-    drawer: "shadow-2xl",
-    panel: "bg-gray-50 dark:bg-gray-900",
-    header: "border-b-2 border-blue-500",
-    newChatButton: "bg-gradient-to-r from-blue-500 to-purple-500",
-  }"
-/>
-```
-
-### Available UI Interfaces
-
-```typescript
-interface AiChatDrawerUI {
-  backdrop?: string
-  drawer?: string
-  panel?: string
-  header?: string
-  headerTitle?: string
-  body?: string
-  footer?: string
-  newChatButton?: string
-  errorContainer?: string
-  retryButton?: string
-}
-
-interface ChatInputUI {
-  root?: string
-  textarea?: string
-  sendButton?: string
-  attachButton?: string
-  suggestionsDropdown?: string
-}
-
-interface ChatMessageUI {
-  root?: string
-  userBubble?: string
-  assistantBubble?: string
-  content?: string
-  loadingDots?: string
-}
-```
-
-## Store API
+## 🏪 Store API
 
 Access the Pinia store for advanced use cases:
 
@@ -362,9 +335,11 @@ store.fetchQuota()
 store.uploadFile(file)
 ```
 
-## Composables
+## 🪝 Composables
 
 ### useAiDrawerShortcut
+
+Enable keyboard shortcuts to toggle the chat drawer:
 
 ```typescript
 import { useAiDrawerShortcut } from "@doderasoftware/restify-ai"
@@ -379,6 +354,8 @@ useAiDrawerShortcut(drawerRef)
 
 ### usePageAiContext
 
+Provide page context to the AI for smarter responses:
+
 ```typescript
 import { usePageAiContext } from "@doderasoftware/restify-ai"
 
@@ -390,9 +367,7 @@ usePageAiContext({
 })
 ```
 
-## Backend Integration
-
-### Laravel Restify Setup
+## 🔌 Backend Integration
 
 This package is designed to work with [Laravel Restify](https://laravel-restify.com):
 
@@ -428,16 +403,18 @@ data: [DONE]
 **Upload Endpoint:**
 
 ```typescript
+// Response
 { id: string, name: string, url: string, type: string, size: number }
 ```
 
 **Quota Endpoint:**
 
 ```typescript
+// Response
 { limit: number, used: number, remaining: number }
 ```
 
-## TypeScript Support
+## 📐 TypeScript
 
 Full TypeScript support with exported types:
 
@@ -456,176 +433,23 @@ import type {
 } from "@doderasoftware/restify-ai"
 ```
 
-## Browser Support
+## 🌐 Browser Support
 
 - Chrome 80+
 - Firefox 75+
 - Safari 13+
 - Edge 80+
 
-## Contributing
+## 🔗 Links
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+- [📖 Laravel Restify Documentation](https://laravel-restify.com)
+- [📦 npm Package](https://www.npmjs.com/package/@doderasoftware/restify-ai)
+- [🏢 BinarCode](https://binarcode.com)
 
-## License
+## 📄 License
 
-[MIT](LICENSE) - [BinarCode](https://binarcode.com)
-
----
-
-<div align="center">
-  <p><strong>Built with love by <a href="https://binarcode.com">BinarCode</a></strong></p>
-  <p>
-    <a href="https://laravel-restify.com">Laravel Restify</a> |
-    <a href="https://github.com/BinarCode/laravel-restify">GitHub</a> |
-    <a href="https://binarcode.com">Website</a>
-  </p>
-  <p><sub>Published by <a href="https://doderasoft.com">Dodera Software</a></sub></p>
-</div>
-
-## Store API
-
-Access the Pinia store for advanced use cases:
-
-```typescript
-import { useRestifyAiStore } from "@doderasoftware/restify-ai"
-
-const store = useRestifyAiStore()
-
-// State
-store.chatHistory          // ChatMessage[]
-store.loading              // boolean
-store.sending              // boolean
-store.quota                // { limit, used, remaining }
-store.error                // { message, failedQuestion, timestamp }
-
-// Actions
-store.toggleChat()
-store.sendMessage(payload)
-store.cancelRequest()
-store.retryLastMessage()
-store.clearChatHistory()
-store.fetchQuota()
-store.uploadFile(file)
-```
-
-## Composables
-
-### useAiDrawerShortcut
-
-```typescript
-import { useAiDrawerShortcut } from "@doderasoftware/restify-ai"
-
-// Uses store directly (recommended)
-useAiDrawerShortcut()
-
-// Or pass a ref
-const drawerRef = ref(false)
-useAiDrawerShortcut(drawerRef)
-```
-
-### usePageAiContext
-
-```typescript
-import { usePageAiContext } from "@doderasoftware/restify-ai"
-
-usePageAiContext({
-  pageType: "invoice-detail",
-  entityId: route.params.id,
-  entityType: "invoice",
-  metadata: { customerName: invoice.value?.customer?.name },
-})
-```
-
-## Backend Integration
-
-### Laravel Restify Setup
-
-This package is designed to work with [Laravel Restify](https://laravel-restify.com):
-
-```php
-// routes/api.php
-Route::middleware("auth:sanctum")->group(function () {
-    Route::post("/ai/ask", [AiController::class, "ask"]);
-    Route::post("/ai/upload", [AiController::class, "upload"]);
-    Route::get("/ai/quota", [AiController::class, "quota"]);
-});
-```
-
-### Expected Request/Response Formats
-
-**Ask Endpoint (SSE Stream):**
-
-```typescript
-// Request
-{
-  question: string
-  history: Array<{ role: string, message: string }>
-  stream: true
-  files?: Array<{ id: string, name: string }>
-  mentions?: Array<{ id: string, type: string, name: string }>
-}
-
-// Response: Server-Sent Events (OpenAI format)
-data: {"choices":[{"delta":{"content":"Hello"}}]}
-data: {"choices":[{"delta":{"content":" world"}}]}
-data: [DONE]
-```
-
-**Upload Endpoint:**
-
-```typescript
-{ id: string, name: string, url: string, type: string, size: number }
-```
-
-**Quota Endpoint:**
-
-```typescript
-{ limit: number, used: number, remaining: number }
-```
-
-## TypeScript Support
-
-Full TypeScript support with exported types:
-
-```typescript
-import type {
-  ChatMessage,
-  ChatAttachment,
-  Mention,
-  ChatQuota,
-  RestifyAiConfig,
-  MentionProvider,
-  SuggestionProvider,
-  AISuggestion,
-  AiChatDrawerUI,
-  AiChatDrawerTexts,
-} from "@doderasoftware/restify-ai"
-```
-
-## Browser Support
-
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-## License
-
-[MIT](LICENSE) - [BinarCode](https://binarcode.com)
+MIT © [BinarCode](https://binarcode.com)
 
 ---
 
-<div align="center">
-  <p><strong>Built with love by <a href="https://binarcode.com">BinarCode</a></strong></p>
-  <p>
-    <a href="https://laravel-restify.com">Laravel Restify</a> |
-    <a href="https://github.com/BinarCode/laravel-restify">GitHub</a> |
-    <a href="https://binarcode.com">Website</a>
-  </p>
-  <p><sub>Published by <a href="https://doderasoft.com">Dodera Software</a></sub></p>
-</div>
+Built with ❤️ by [BinarCode](https://binarcode.com) · Published by [Dodera Software](https://doderasoft.com)
