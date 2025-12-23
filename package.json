@@ -1,6 +1,6 @@
 {
   "name": "@doderasoftware/restify-ai",
-  "version": "0.1.0-beta.7",
+  "version": "0.1.0-beta.8",
   "description": "Professional AI Chatbot Vue 3 component for Laravel Restify backends. SSE streaming, file uploads, @mentions, context-aware suggestions, and full TypeScript support.",
   "type": "module",
   "main": "./dist/restify-ai.umd.cjs",
@@ -41,7 +41,9 @@
     "version:major": "npm version major",
     "version:beta": "npm version prerelease --preid=beta",
     "publish:beta": "npm publish --tag beta --access public",
-    "publish:latest": "npm publish --access public"
+    "publish:latest": "npm publish --access public",
+    "format": "prettier --write 'src/**/*.{ts,vue}'",
+    "lint:fix": "eslint . --ext .vue,.ts --fix"
   },
   "peerDependencies": {
     "pinia": ">=2.1.0",
@@ -63,13 +65,19 @@
     "@tailwindcss/typography": "^0.5.10",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^8.50.1",
+    "@typescript-eslint/parser": "^8.50.1",
     "@vitejs/plugin-vue": "^4.6.2",
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.16",
+    "eslint": "^9.39.2",
+    "eslint-plugin-vue": "^10.6.2",
+    "globals": "^16.5.0",
     "pinia": "^2.1.7",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5",
     "typescript": "~5.6.0",
+    "typescript-eslint": "^8.50.1",
     "vite": "^5.4.11",
     "vite-plugin-dts": "^3.6.4",
     "vitest": "^1.6.1",

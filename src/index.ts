@@ -108,6 +108,7 @@ export {
   ChatInput,
   AiEmptyState,
   AiChatDrawer,
+  ErrorBoundary,
 } from './components'
 
 // Plugin options

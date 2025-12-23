@@ -1,4 +1,4 @@
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import type { ChatAttachment, Mention, HistoryLimitConfig, AiChatDrawerTexts } from '../types'
 
 interface HistoryLimitState {

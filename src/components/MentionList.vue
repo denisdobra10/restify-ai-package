@@ -4,8 +4,14 @@
     class="absolute bottom-full left-0 right-0 mb-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg max-h-60 overflow-y-auto z-50"
     :class="ui.root"
   >
-    <div class="p-2" :class="ui.container">
-      <template v-for="(group, groupType) in groupedItems" :key="groupType">
+    <div
+      class="p-2"
+      :class="ui.container"
+    >
+      <template
+        v-for="(group, groupType) in groupedItems"
+        :key="groupType"
+      >
         <!-- Group Header -->
         <div
           v-if="Object.keys(groupedItems).length > 1"
@@ -32,7 +38,11 @@
           @mouseenter="updateSelectedIndex(getFlatIndex(groupType as string, index))"
         >
           <!-- Icon -->
-          <slot name="item-icon" :item="item" :type="groupType">
+          <slot
+            name="item-icon"
+            :item="item"
+            :type="groupType"
+          >
             <span 
               class="w-8 h-8 flex items-center justify-center rounded-full text-xs font-semibold flex-shrink-0"
               :class="[ui.itemIcon, getIconClasses(item.type)]"
@@ -42,7 +52,10 @@
           </slot>
           
           <!-- Content -->
-          <div class="flex-1 min-w-0" :class="ui.itemContent">
+          <div
+            class="flex-1 min-w-0"
+            :class="ui.itemContent"
+          >
             <p 
               class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate"
               :class="ui.itemName"

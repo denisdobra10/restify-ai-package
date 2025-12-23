@@ -26,7 +26,10 @@
           :class="ui?.panel"
         >
           <!-- Header Slot -->
-          <slot name="header" v-bind="headerSlotProps">
+          <slot
+            name="header"
+            v-bind="headerSlotProps"
+          >
             <DrawerHeader
               :ui="ui"
               :is-setup-mode="isSetupMode"
@@ -45,7 +48,10 @@
               @toggle-fullscreen="toggleFullscreen"
             >
               <template #quota>
-                <slot name="quota" :quota="store.quota" />
+                <slot
+                  name="quota"
+                  :quota="store.quota"
+                />
               </template>
             </DrawerHeader>
           </slot>
@@ -55,17 +61,30 @@
             :class="[{ 'max-w-5xl': isFullscreen }, ui?.body]"
           >
             <!-- Setup Mode -->
-            <div v-if="isSetupMode" class="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto">
+            <div
+              v-if="isSetupMode"
+              class="flex-1 flex flex-col items-center justify-center p-6 overflow-y-auto"
+            >
               <slot name="setup">
-                <SetupGuide :copied="copied" @copy="copySetupCode" />
+                <SetupGuide
+                  :copied="copied"
+                  @copy="copySetupCode"
+                />
               </slot>
             </div>
 
             <!-- Normal mode -->
             <template v-else>
               <!-- Empty State -->
-              <div v-if="store.chatHistory.length === 0" class="flex-1 flex flex-col overflow-y-auto">
-                <slot name="empty-state" :suggestions="mappedSuggestions" :on-click="onExampleClick">
+              <div
+                v-if="store.chatHistory.length === 0"
+                class="flex-1 flex flex-col overflow-y-auto"
+              >
+                <slot
+                  name="empty-state"
+                  :suggestions="mappedSuggestions"
+                  :on-click="onExampleClick"
+                >
                   <AiEmptyState @item-click="onExampleClick" />
                 </slot>
               </div>
@@ -99,10 +118,16 @@
                 </DrawerMessageList>
               </div>
 
-              <div id="rai-chat-bottom" class="h-8" />
+              <div
+                id="rai-chat-bottom"
+                class="h-8"
+              />
 
               <!-- Chat Input -->
-              <slot name="input" v-bind="inputSlotProps">
+              <slot
+                name="input"
+                v-bind="inputSlotProps"
+              >
                 <ChatInput
                   v-model="question"
                   :sending="store.sending"
@@ -165,7 +190,6 @@ import { useAiSuggestions } from '../composables/useAiSuggestions'
 import { useLoadingText } from '../composables/useLoadingText'
 import { useHistoryLimit } from '../composables/useHistoryLimit'
 import AiEmptyState from './AiEmptyState.vue'
-import ChatMessage from './ChatMessage.vue'
 import ChatInput from './ChatInput.vue'
 import DrawerHeader from './drawer/DrawerHeader.vue'
 import DrawerMessageList from './drawer/DrawerMessageList.vue'
@@ -175,8 +199,6 @@ import type {
   ChatAttachment, 
   AISuggestion, 
   Mention, 
-  ChatQuota, 
-  SubmitPayload, 
   HeaderSlotProps, 
   InputSlotProps,
   AiChatDrawerUI,

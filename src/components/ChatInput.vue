@@ -7,7 +7,10 @@
     @dragleave.prevent="fileAttachments.handleDragLeave"
     @drop.prevent="fileAttachments.handleDrop"
   >
-    <form @submit.prevent="handleSubmit" :class="uiClasses.form">
+    <form
+      :class="uiClasses.form"
+      @submit.prevent="handleSubmit"
+    >
       <div class="max-w-3xl mx-auto space-y-3">
         <input
           ref="fileInputRef"
@@ -16,7 +19,7 @@
           multiple
           :accept="fileAttachments.acceptedFileTypes"
           @change="fileAttachments.handleFileSelect"
-        />
+        >
 
         <!-- Attachments Preview -->
         <AttachmentsPreview
@@ -29,7 +32,10 @@
           @remove="fileAttachments.removeAttachment"
         />
 
-        <div class="relative" :class="uiClasses.inputContainer">
+        <div
+          class="relative"
+          :class="uiClasses.inputContainer"
+        >
           <!-- Suggestions Dropdown -->
           <SuggestionsDropdown
             v-if="suggestionsHandler.showSuggestions.value && suggestions.length > 0"
@@ -79,8 +85,18 @@
               :title="texts?.attachFiles || 'Attach files'"
               @click="triggerFilePicker"
             >
-              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
+                />
               </svg>
             </button>
 
@@ -94,7 +110,8 @@
                 :placeholder="computedPlaceholder"
                 :disabled="disabled"
                 class="block w-full bg-transparent py-3 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 focus:outline-none focus-visible:outline-none resize-none"
-                :class="uiClasses.textarea" :style="textareaStyle"
+                :class="uiClasses.textarea"
+                :style="textareaStyle"
                 @input="handleTextInput"
                 @keydown="handleKeyDown"
                 @focus="handleFocus"
@@ -118,7 +135,10 @@
 
         <!-- Context Link Slot -->
         <slot name="context-link">
-          <div v-if="contextLinkText" class="flex justify-center">
+          <div
+            v-if="contextLinkText"
+            class="flex justify-center"
+          >
             <button
               type="button"
               class="text-xs text-gray-400 hover:text-primary transition-colors"
@@ -136,7 +156,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick, onMounted } from 'vue'
-import { getLabel } from '../config'
 import { useFileAttachments, useMentionInput, useInputSuggestions, useTextareaResize } from '../composables/useChatInput'
 import MentionList from './MentionList.vue'
 import AttachmentsPreview from './input/AttachmentsPreview.vue'

@@ -1,4 +1,4 @@
-import { type Ref, nextTick, onUnmounted } from 'vue'
+import { onUnmounted } from 'vue'
 
 export interface UseChatScrollReturn {
   scrollToBottom: (container?: HTMLElement | null) => void
