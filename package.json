@@ -1,7 +1,7 @@
 {
   "name": "@doderasoftware/restify-ai",
-  "version": "0.1.0-beta.4",
-  "description": "Professional AI Chatbot Vue 3 component for Laravel Restify backends. Fully customizable with SSE streaming, file attachments, mentions, and context-aware suggestions.",
+  "version": "0.1.0-beta.5",
+  "description": "Professional AI Chatbot Vue 3 component for Laravel Restify backends. SSE streaming, file uploads, @mentions, context-aware suggestions, and full TypeScript support.",
   "type": "module",
   "main": "./dist/restify-ai.umd.cjs",
   "module": "./dist/restify-ai.js",
@@ -83,37 +83,49 @@
     "chatbot",
     "chat",
     "assistant",
+    "ai-assistant",
     "laravel",
     "restify",
     "laravel-restify",
+    "binarcode",
     "sse",
     "streaming",
     "component",
     "openai",
     "anthropic",
     "claude",
+    "gpt",
+    "llm",
     "tailwindcss",
-    "typescript"
+    "typescript",
+    "pinia",
+    "vue-component",
+    "chatgpt",
+    "ai-chat"
   ],
   "author": {
-    "name": "Dodera Software",
-    "email": "contact@doderasoftware.com",
-    "url": "https://doderasoftware.com"
+    "name": "BinarCode",
+    "email": "hello@binarcode.com",
+    "url": "https://binarcode.com"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/doderasoftware/restify-ai.git"
+    "url": "git+https://github.com/BinarCode/restify-ai.git"
   },
   "bugs": {
-    "url": "https://github.com/doderasoftware/restify-ai/issues"
+    "url": "https://github.com/BinarCode/restify-ai/issues"
   },
-  "homepage": "https://github.com/doderasoftware/restify-ai#readme",
+  "homepage": "https://laravel-restify.com",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/binarcode"
   }
 }
