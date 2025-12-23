@@ -93,8 +93,8 @@
                 data-ai-input
                 :placeholder="computedPlaceholder"
                 :disabled="disabled"
-                class="block w-full bg-transparent py-3 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 focus:outline-none focus-visible:outline-none resize-none pl-12"
-                :class="[uiClasses.textarea, textareaRightPadding]"
+                class="block w-full bg-transparent py-3 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 focus:outline-none focus-visible:outline-none resize-none"
+                :class="uiClasses.textarea" :style="textareaStyle"
                 @input="handleTextInput"
                 @keydown="handleKeyDown"
                 @focus="handleFocus"
@@ -238,14 +238,14 @@ const computedPlaceholder = computed(() => {
   return props.supportRequestMode ? props.supportPlaceholder : props.placeholder
 })
 
-const textareaRightPadding = computed(() => {
+const textareaStyle = computed(() => {
   if (!props.showSupportModeToggle) {
-    return 'pr-14'
+    return { paddingLeft: '3rem', paddingRight: '3.5rem' }
   }
   if (props.supportRequestMode) {
-    return 'pr-32'
+    return { paddingLeft: '3rem', paddingRight: '8rem' }
   }
-  return 'pr-24'
+  return { paddingLeft: '3rem', paddingRight: '6rem' }
 })
 
 const isValid = computed(() => {

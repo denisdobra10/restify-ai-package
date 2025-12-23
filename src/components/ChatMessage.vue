@@ -17,7 +17,7 @@
     >
       <!-- Message Content -->
       <div 
-        class="rounded-2xl px-4 py-3 bg-primary text-white max-w-fit"
+        class="rounded-2xl px-4 py-3 bg-primary-500 text-white max-w-fit"
         :class="ui.userBubble"
       >
         <p
@@ -80,7 +80,7 @@
 
       <!-- User Avatar -->
       <div 
-        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary overflow-hidden"
+        class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 overflow-hidden"
         :class="ui.userAvatar"
       >
         <img 

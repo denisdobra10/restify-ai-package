@@ -31,7 +31,7 @@
     <div v-if="quota.remaining === 0" class="flex justify-center">
       <button
         type="button"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all shadow-sm"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-all shadow-sm"
         @click="$emit('contact-support')"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

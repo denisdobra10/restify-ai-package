@@ -24,7 +24,12 @@ import {
 let controller = new AbortController()
 
 // Build full URL with baseUrl support
-function buildUrl(endpoint: string): string {
+function buildUrl(endpoint: string | undefined): string {
+  if (!endpoint) {
+    console.error('[RestifyAi] Endpoint is undefined. Check your endpoints configuration.')
+    throw new Error('AI service endpoint is not configured. Please contact support.')
+  }
+
   const config = getRestifyAiConfig()
   const baseUrl = config?.baseUrl || ''
 
@@ -35,6 +40,36 @@ function buildUrl(endpoint: string): string {
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
 
   return `${normalizedBase}${normalizedEndpoint}`
+}
+
+// Convert technical errors to user-friendly messages
+function getUserFriendlyErrorMessage(err: unknown): string {
+  const errorMessage = err instanceof Error ? err.message : String(err)
+  const lowerMessage = errorMessage.toLowerCase()
+  
+  if (lowerMessage.includes('failed to fetch') || lowerMessage.includes('network') || lowerMessage.includes('fetch')) {
+    return 'Unable to connect to the AI service. Please check your internet connection and try again.'
+  }
+  if (lowerMessage.includes('500') || lowerMessage.includes('internal server error')) {
+    return 'The AI service is temporarily unavailable. Please try again in a few moments.'
+  }
+  if (lowerMessage.includes('timeout') || lowerMessage.includes('timed out')) {
+    return 'The request took too long. Please try again.'
+  }
+  if (lowerMessage.includes('401') || lowerMessage.includes('unauthorized') || lowerMessage.includes('authentication')) {
+    return 'Your session has expired. Please refresh the page and try again.'
+  }
+  if (lowerMessage.includes('429') || lowerMessage.includes('rate limit') || lowerMessage.includes('too many requests')) {
+    return 'Too many requests. Please wait a moment before trying again.'
+  }
+  if (lowerMessage.includes('cors') || lowerMessage.includes('cross-origin')) {
+    return 'Unable to connect to the AI service. Please contact support.'
+  }
+  if (lowerMessage.includes('endpoint is not configured')) {
+    return 'AI service endpoint is not configured. Please contact support.'
+  }
+  
+  return 'Something went wrong. Please try again later.'
 }
 
 // Default stream parser - supports OpenAI format
@@ -573,7 +608,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
           }
 
           this.error = {
-            message: err.message || 'Network error occurred. Please try again.',
+            message: getUserFriendlyErrorMessage(err),
             failedQuestion: question,
             failedAttachments: normalizedAttachments,
             timestamp: Date.now(),

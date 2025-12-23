@@ -1,5 +1,6 @@
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, type Ref } from 'vue'
 import { getConfigValue, getRestifyAiConfig } from '../config'
+import { useRestifyAiStore } from '../store'
 
 export interface UseKeyboardShortcutOptions {
   shortcut?: string | null
@@ -7,8 +8,8 @@ export interface UseKeyboardShortcutOptions {
   enabled?: boolean
 }
 
-// Parse shortcut string like "cmd+g", "ctrl+k", "meta+shift+p"
-function parseShortcut(shortcut: string): { key: string; meta: boolean; ctrl: boolean; shift: boolean; alt: boolean } {
+// Parse shortcut string like "cmd+g", "ctrl+k", "meta+shift+p", "mod+g"
+function parseShortcut(shortcut: string): { key: string; meta: boolean; ctrl: boolean; shift: boolean; alt: boolean; mod: boolean } {
   const parts = shortcut.toLowerCase().split('+')
   const key = parts.pop() || ''
 
@@ -18,11 +19,21 @@ function parseShortcut(shortcut: string): { key: string; meta: boolean; ctrl: bo
     ctrl: parts.includes('ctrl') || parts.includes('control'),
     shift: parts.includes('shift'),
     alt: parts.includes('alt') || parts.includes('option'),
+    mod: parts.includes('mod'), // Platform-independent: Cmd on Mac, Ctrl on Windows/Linux
   }
 }
 
 function matchesShortcut(event: KeyboardEvent, shortcut: ReturnType<typeof parseShortcut>): boolean {
   const eventKey = event.key.toLowerCase()
+
+  // Handle "mod" - Cmd on Mac, Ctrl on Windows/Linux
+  if (shortcut.mod) {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
+    const modifierMatch = isMac ? event.metaKey : event.ctrlKey
+    const shiftMatch = shortcut.shift ? event.shiftKey : !event.shiftKey
+    const altMatch = shortcut.alt ? event.altKey : !event.altKey
+    return eventKey === shortcut.key && modifierMatch && shiftMatch && altMatch
+  }
 
   // Check modifier keys
   const metaMatch = shortcut.meta ? event.metaKey : !event.metaKey
@@ -45,10 +56,10 @@ export function useKeyboardShortcut(options: UseKeyboardShortcutOptions) {
   const { onToggle, enabled = true } = options
   const isActive = ref(false)
 
-  // Get shortcut from config or options, default to cmd+g
+  // Get shortcut from config or options, default to mod+g
   const shortcutString = options.shortcut !== undefined
     ? options.shortcut
-    : (getConfigValue('keyboardShortcut') ?? 'cmd+g')
+    : (getConfigValue('keyboardShortcut') ?? 'mod+g')
 
   // If shortcut is explicitly null, disable keyboard shortcut
   if (shortcutString === null) {
@@ -94,11 +105,21 @@ export function useKeyboardShortcut(options: UseKeyboardShortcutOptions) {
   return { isActive }
 }
 
-// Export a simple hook for opening/closing the drawer
-export function useAiDrawerShortcut(drawerRef: { value: boolean }) {
+/**
+ * Simple hook for opening/closing the AI drawer with keyboard shortcut
+ * Uses the store directly if no ref is provided
+ */
+export function useAiDrawerShortcut(drawerRef?: Ref<boolean>) {
+  // If no ref provided, use the store directly
+  const store = useRestifyAiStore()
+  
   return useKeyboardShortcut({
     onToggle: () => {
-      drawerRef.value = !drawerRef.value
+      if (drawerRef) {
+        drawerRef.value = !drawerRef.value
+      } else {
+        store.showChat = !store.showChat
+      }
     }
   })
 }

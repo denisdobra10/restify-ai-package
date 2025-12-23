@@ -91,7 +91,7 @@ const modalClass = computed(() => {
 const confirmButtonClass = computed(() => {
   const baseClass = props.confirmVariant === 'danger' 
     ? 'bg-red-600 hover:bg-red-700' 
-    : 'bg-primary hover:bg-primary/90'
+    : 'bg-primary-500 hover:bg-primary-600'
   
   const uiClass = props.confirmVariant === 'danger'
     ? props.ui?.closeConfirmButton

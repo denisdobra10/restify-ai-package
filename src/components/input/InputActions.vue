@@ -75,7 +75,7 @@ const buttonClasses = computed(() => {
     return [props.ui.stopButton || 'bg-red-500 text-white hover:bg-red-600']
   }
   if (props.canSend) {
-    return [props.ui.sendButtonActive || 'bg-primary text-white hover:bg-primary/90']
+    return [props.ui.sendButtonActive || 'bg-primary-500 text-white hover:bg-primary-600']
   }
   return [props.ui.sendButtonDisabled || 'bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed opacity-60']
 })
