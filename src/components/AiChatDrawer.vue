@@ -132,6 +132,7 @@
                 v-bind="inputSlotProps"
               >
                 <ChatInput
+                  ref="chatInputRef"
                   v-model="question"
                   :sending="store.sending"
                   :placeholder="props.texts?.placeholder || getLabel('inputPlaceholder')"
@@ -283,6 +284,7 @@ function t(key: keyof AiChatDrawerTexts, params?: Record<string, any>): string {
 const store = useRestifyAiStore()
 const question = ref('')
 const chatContainer = ref<HTMLElement | null>(null)
+const chatInputRef = ref<InstanceType<typeof ChatInput> | null>(null)
 const isFullscreen = ref(false)
 const copied = ref(false)
 const showCloseConfirm = ref(false)
@@ -408,9 +410,9 @@ function toggleSupportMode() {
 
 async function scrollToBottom() {
   await nextTick()
-  const el = document.getElementById('rai-chat-bottom')
+  const el = chatContainer.value
   if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'end' })
+    el.scrollTop = el.scrollHeight
   }
 }
 
@@ -534,7 +536,11 @@ watch(
     scrollToBottom()
   }
 )
-watch(() => props.modelValue, (isOpen) => {
+watch(() => props.modelValue, async (isOpen) => {
+  if (isOpen) {
+    await scrollToBottom()
+    chatInputRef.value?.focus()
+  }
   if (isOpen && props.autoFetchQuota) {
     store.fetchQuota()
   }

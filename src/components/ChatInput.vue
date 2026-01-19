@@ -370,6 +370,10 @@ function handleBlur() {
   }, 200)
 }
 
+defineExpose({
+  focus: () => textareaRef.value?.focus()
+})
+
 onMounted(() => {
   nextTick(adjustTextareaHeight)
 })

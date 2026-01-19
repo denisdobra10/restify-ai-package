@@ -96,19 +96,20 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
   },
 
   actions: {
-    async scrollToBottom(): Promise<void> {
+    async scrollToBottom(delay: number = 0): Promise<void> {
       await nextTick()
+      if (delay > 0) await new Promise(r => setTimeout(r, delay))
       const el = document.getElementById('rai-chat-bottom')
       if (el) {
         el.scrollIntoView({ behavior: 'smooth' })
       }
     },
 
-    parseStreamContent(event: EventSourceMessage): string | null {
+    parseStreamContent(eventType: string | undefined, eventData: string): string | null {
       const config = getRestifyAiConfig()
       const customParser = config?.parseStreamContent
-      if (customParser) return customParser(event.data)
-      return defaultParseStreamContent(event.data)
+      if (customParser) return customParser(eventData, eventType)
+      return defaultParseStreamContent(eventData, eventType)
     },
 
     async askQuestion(
@@ -152,6 +153,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       normalizedAttachments.forEach((a) => this.registerUploadedFile(a))
       saveChatHistory(this.chatHistory)
       this.sending = true
+      this.scrollToBottom()
 
       if (this.chatHistory.length >= this.chatHistoryLimit) {
         config.onError?.(new Error('Chat history limit reached'))
@@ -161,8 +163,8 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
         try {
           const history = this.chatHistory.map((item) => ({
             role: item.role,
-            message: item.message,
-            attachments: item.attachments ?? [],
+            content: item.message,
+            
           }))
 
           const filesMap: Record<string, Record<string, unknown>> = {}
@@ -192,6 +194,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
           })
           saveChatHistory(this.chatHistory)
           controller = new AbortController()
+          this.scrollToBottom()
 
           const authToken = await config.getAuthToken()
           const customHeaders = config.getCustomHeaders ? await config.getCustomHeaders() : {}
@@ -208,13 +211,31 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
             headers['Authorization'] = `Bearer ${authToken}`
           }
 
+          const context: Record<string, unknown> = {}
+          if (typeof window !== "undefined") {
+            context.route = window.location.pathname
+            const params = new URLSearchParams(window.location.search)
+            const query: Record<string, string> = {}
+            params.forEach((v, k) => { query[k] = v })
+            if (Object.keys(query).length > 0) context.query = query
+            if (document.title) context.pageTitle = document.title
+          }
+          if (mentions.length > 0) {
+            context.mentionedEntities = mentions.map(m => ({
+              type: m.type, id: m.id, displayName: m.name, metadata: m.metadata
+            }))
+          }
           let requestBody: AiRequestPayload = {
-            question,
+            message: question,
             history,
             stream: true,
             ...(files.length > 0 && { files }),
-            ...(mentions.length > 0 && { mentions }),
+            ...(Object.keys(context).length > 0 && { context }),
+            
             ...(this.supportRequestMode && { contact_support: true }),
+            ...(config.model && { model: config.model }),
+            ...(config.temperature && { temperature: config.temperature }),
+            ...(config.maxTokens && { max_tokens: config.maxTokens }),
           }
 
           if (config.beforeSend) requestBody = await config.beforeSend(requestBody)
@@ -261,7 +282,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
             },
 
             onmessage: async (event) => {
-              const content = this.parseStreamContent(event)
+              const content = this.parseStreamContent(event.event, event.data)
               if (!content) return
 
               this.chatHistory[index].loading = false
@@ -522,15 +543,18 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
     },
 
     toggleDrawer(): void {
+      
       this.showChat = !this.showChat
       saveDrawerState(this.showChat)
       getRestifyAiConfig()?.onDrawerToggle?.(this.showChat)
+      if (this.showChat) this.scrollToBottom(100)
     },
 
     openDrawer(): void {
       this.showChat = true
       saveDrawerState(true)
       getRestifyAiConfig()?.onDrawerToggle?.(true)
+      this.scrollToBottom(100)
     },
 
     closeDrawer(): void {

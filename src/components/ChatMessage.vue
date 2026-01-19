@@ -125,13 +125,13 @@
       :class="ui.assistantMessage"
     >
       <!-- Avatar -->
-      <div class="flex-shrink-0 mt-0.5">
+      <div class="flex-shrink-0 group-hover:opacity-0 transition-opacity">
         <AiAvatar />
       </div>
 
       <!-- Message Content -->
       <div 
-        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-5 py-4 shadow-sm rounded-2xl transition-all duration-200 flex-1"
+        class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm rounded-2xl transition-all duration-200 max-w-[85%]"
         :class="ui.assistantBubble"
       >
         <!-- Loading State -->
@@ -164,7 +164,7 @@
         <div
           v-else-if="message.message"
           :id="message.id"
-          class="prose prose-sm max-w-none prose-gray dark:prose-invert"
+          class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed"
           :class="ui.content"
           v-html="renderedMessage"
         />
@@ -230,7 +230,7 @@
     <ChatMessageActions
       v-if="message.role === 'assistant' && !message.loading && !message.streaming && showActions"
       :message="message"
-      class="absolute -bottom-8 left-14"
+      class="absolute top-0 left-0"
       :class="ui.actionsContainer"
       @copy="handleCopy"
     />

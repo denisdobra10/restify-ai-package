@@ -150,6 +150,9 @@ export interface RestifyAiConfig {
 
   // Limits
   chatHistoryLimit?: number
+  model?: string
+  temperature?: number
+  maxTokens?: number
   maxAttachments?: number
   maxFileSize?: number
   acceptedFileTypes?: string

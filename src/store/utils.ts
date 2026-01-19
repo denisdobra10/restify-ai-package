@@ -57,11 +57,13 @@ export function getUserFriendlyErrorMessage(err: unknown): string {
 /**
  * Default stream parser - supports OpenAI format
  */
-export function defaultParseStreamContent(eventData: string): string | null {
+export function defaultParseStreamContent(eventData: string, eventType?: string): string | null {
   try {
+    if (eventType === 'done') return '[DONE]'
     if (eventData === '[DONE]') return '[DONE]'
     const data = JSON.parse(eventData)
-    return data?.choices?.[0]?.delta?.content || ''
+    if (data?.content !== undefined) return data.content
+    return data?.choices?.[0]?.delta?.content || null
   } catch {
     return null
   }
