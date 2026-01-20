@@ -42,8 +42,8 @@
               :show-fullscreen-toggle="showFullscreenToggle"
               :is-fullscreen="isFullscreen"
               :show-message-count="showMessageCount"
-              :message-count="userMessageCount"
-              :message-limit="store.chatHistoryLimit"
+              :message-count="store.quota.used"
+              :message-limit="store.quota.limit"
               :t="t"
               @new-chat="startNewChat"
               @close="handleClose"
@@ -305,8 +305,8 @@ const {
   checkHistoryLimit,
   setPendingMessage,
 } = useHistoryLimit({
-  getHistoryLength: () => store.chatHistory.length,
-  getStoreLimit: () => store.chatHistoryLimit,
+  getHistoryLength: () => store.quota.limit - store.quota.remaining,
+  getStoreLimit: () => store.quota.limit,
   getConfig: () => props.historyLimit,
   getTexts: () => props.texts,
   onStartNewChat: () => store.clearChatHistory(),

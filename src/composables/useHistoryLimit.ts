@@ -50,14 +50,14 @@ export function useHistoryLimit(options: UseHistoryLimitOptions) {
     const isAtLimit = computed(() => remaining.value === 0)
 
     const dialogTitle = computed(() => {
-        if (state.value.isReached) {
+        if (state.value.isReached || isAtLimit.value) {
             return getTexts()?.historyLimitReachedTitle ?? 'Chat Limit Reached'
         }
         return getTexts()?.historyLimitWarningTitle ?? 'Approaching Chat Limit'
     })
 
     const dialogMessage = computed(() => {
-        if (state.value.isReached) {
+        if (state.value.isReached || isAtLimit.value) {
             return getConfig()?.limitMessage ?? getTexts()?.historyLimitReachedMessage ??
                 'You have reached the maximum number of messages in this conversation. Start a new chat to continue.'
         }

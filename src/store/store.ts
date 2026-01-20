@@ -80,7 +80,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       isFullscreen: false,
       sending: false,
       pageContext: null,
-      quota: { limit: 100, used: 0, remaining: 100 },
+      quota: (() => { const l = getConfigValue("chatHistoryLimit") || 10; const used = chatState.history.filter((m: any) => m.role === "user").length; return { limit: l, used, remaining: Math.max(0, l - used) } })(),
       error: initialError,
       supportRequestMode: false,
       setupState: !isConfigured() && !isSetupComplete()
@@ -153,6 +153,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       normalizedAttachments.forEach((a) => this.registerUploadedFile(a))
       saveChatHistory(this.chatHistory)
       this.sending = true
+      if (this.quota.remaining > 0 && !isSupportRequest) { this.quota.remaining--; this.quota.used++ }
       this.scrollToBottom()
 
       if (this.chatHistory.length >= this.chatHistoryLimit) {
@@ -304,13 +305,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
                   saveChatHistory(this.chatHistory)
                   config.onStreamEnd?.(generatedContent)
 
-                  if (this.quota.remaining > 0 && !this.supportRequestMode) {
-                    this.quota.remaining--
-                    this.quota.used++
-                    if (this.quota.remaining === 0 && config.enableSupportMode !== false) {
-                      this.supportRequestMode = true
-                    }
-                  }
+                  if (this.quota.remaining === 0 && config.enableSupportMode !== false) { this.supportRequestMode = true }
 
                   if (this.supportRequestMode && this.quota.remaining > 0) {
                     this.supportRequestMode = false
@@ -393,6 +388,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       this.uploadedFiles = {}
       this.clearError()
       if (this.quota.remaining > 0) this.supportRequestMode = false
+      const l = getConfigValue("chatHistoryLimit") || 10; this.quota = { limit: l, used: 0, remaining: l }
       clearStoredChatHistory()
       config?.onNewChat?.()
     },
