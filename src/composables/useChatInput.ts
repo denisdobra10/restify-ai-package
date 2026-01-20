@@ -213,6 +213,7 @@ export function useMentionInput(
     const mentionItems = ref<MentionItem[]>([])
     const selectedMentionIndex = ref(0)
     const mentionContext = ref({ inMention: false, query: '', startPos: 0 })
+    const skipNextCheck = ref(false)
     const insertedMentions = ref<{ id: string; name: string; type?: string; metadata?: Record<string, any> | null }[]>([])
 
     const mentionProviders = computed<MentionProvider[]>(() => {
@@ -221,6 +222,7 @@ export function useMentionInput(
     })
 
     function checkForMentions(text: string) {
+        if (skipNextCheck.value) { skipNextCheck.value = false; return }
         const textarea = getTextarea()
         if (!textarea) return
 
@@ -267,6 +269,7 @@ export function useMentionInput(
         const after = currentValue.slice(textarea?.selectionStart || startPos)
 
         const displayName = item.name || item.label || item.title || item.id
+        skipNextCheck.value = true
         setValue(`${before}@${displayName} ${after}`)
 
         insertedMentions.value.push({

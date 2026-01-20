@@ -31,7 +31,7 @@
             ui.item,
             {
               [ui.itemSelected || 'bg-primary/10']: getFlatIndex(groupType as string, index) === selectedIndex,
-              'hover:bg-gray-50 dark:hover:bg-gray-700': getFlatIndex(groupType as string, index) !== selectedIndex,
+              'hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer': getFlatIndex(groupType as string, index) !== selectedIndex,
             }
           ]"
           @click="selectItem(item)"
