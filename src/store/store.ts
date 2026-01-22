@@ -322,9 +322,26 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
               await this.scrollToBottom()
             },
 
-            onerror(err) {
-              hasError = true
-              throw err
+            onclose: () => {
+              // Connection closed - normal after streaming completes
+              // If we received content, treat as success
+              if (generatedContent && !hasError) {
+                this.chatHistory[index].streaming = false
+                this.chatHistory[index].loading = false
+                saveChatHistory(this.chatHistory)
+                config.onStreamEnd?.(generatedContent)
+                if (config.afterResponse) config.afterResponse(this.chatHistory[index])
+                config.onResponseReceived?.(this.chatHistory[index])
+              }
+            },
+
+            onerror: (err) => {
+              // Only treat as error if we haven't received any content
+              if (!generatedContent) {
+                hasError = true
+                throw err
+              }
+              // If we have content, ignore the error (stream closed after completion)
             },
           })
 

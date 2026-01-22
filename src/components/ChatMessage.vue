@@ -347,4 +347,85 @@ function handleCopy(message: ChatMessage) {
 :deep(.bg-primary .mention) {
   @apply bg-white/20 text-white;
 }
+
+/* Markdown content styling for assistant messages */
+:deep(h1) {
+  @apply text-lg font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2 first:mt-0;
+}
+
+:deep(h2) {
+  @apply text-base font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2 first:mt-0;
+}
+
+:deep(h3) {
+  @apply text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-1.5 first:mt-0;
+}
+
+:deep(h4), :deep(h5), :deep(h6) {
+  @apply text-sm font-semibold text-gray-900 dark:text-gray-100 mt-3 mb-1 first:mt-0;
+}
+
+:deep(p) {
+  @apply my-2 first:mt-0 last:mb-0;
+}
+
+:deep(ul) {
+  @apply my-2 ml-4 list-disc space-y-1;
+}
+
+:deep(ol) {
+  @apply my-2 ml-4 list-decimal space-y-1;
+}
+
+:deep(li) {
+  @apply text-sm text-gray-700 dark:text-gray-200;
+}
+
+:deep(li > p) {
+  @apply my-0;
+}
+
+:deep(code) {
+  @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-1.5 py-0.5 rounded text-xs font-mono;
+}
+
+:deep(pre) {
+  @apply bg-gray-100 dark:bg-gray-700 rounded-lg p-3 my-3 overflow-x-auto;
+}
+
+:deep(pre code) {
+  @apply bg-transparent p-0 text-xs;
+}
+
+:deep(blockquote) {
+  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-3 italic text-gray-600 dark:text-gray-400;
+}
+
+:deep(a) {
+  @apply text-primary hover:underline;
+}
+
+:deep(strong) {
+  @apply font-semibold text-gray-900 dark:text-gray-100;
+}
+
+:deep(em) {
+  @apply italic;
+}
+
+:deep(table) {
+  @apply w-full my-3 text-sm border-collapse;
+}
+
+:deep(th) {
+  @apply bg-gray-100 dark:bg-gray-700 px-3 py-2 text-left font-semibold text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600;
+}
+
+:deep(td) {
+  @apply px-3 py-2 border border-gray-200 dark:border-gray-600;
+}
+
+:deep(hr) {
+  @apply my-4 border-gray-200 dark:border-gray-600;
+}
 </style>
