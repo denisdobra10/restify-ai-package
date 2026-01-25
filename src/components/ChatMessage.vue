@@ -59,20 +59,10 @@
                 class="object-cover h-full w-full"
                 alt=""
               >
-              <svg
+              <IconDocument
                 v-else
                 class="w-5 h-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                />
-              </svg>
+              />
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-semibold text-white truncate">
@@ -103,18 +93,10 @@
           alt="User" 
           class="h-full w-full object-cover"
         >
-        <svg
+        <IconUser
           v-else
           class="h-4 w-4 text-white"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            fill-rule="evenodd"
-            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
-            clip-rule="evenodd"
-          />
-        </svg>
+        />
       </div>
     </div>
 
@@ -192,20 +174,10 @@
                 class="object-cover h-full w-full"
                 alt=""
               >
-              <svg
+              <IconDocument
                 v-else
                 class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-                />
-              </svg>
+              />
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 truncate">
@@ -241,6 +213,7 @@
 import { computed, ref } from 'vue'
 import AiAvatar from './AiAvatar.vue'
 import ChatMessageActions from './ChatMessageActions.vue'
+import { IconDocument, IconUser } from './icons'
 import { useChatMarkdown } from '../composables/useChatMarkdown'
 import { getRestifyAiConfig } from '../config'
 import type { ChatMessage, ChatAttachment, ChatMessageUI, ChatMessageTexts } from '../types'

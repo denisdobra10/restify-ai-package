@@ -23,20 +23,10 @@
             class="object-cover h-full w-full"
             alt=""
           >
-          <svg
+          <IconDocument
             v-else
             class="w-5 h-5 text-gray-500 dark:text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-            />
-          </svg>
+          />
         </div>
         <div class="flex-1 min-w-0">
           <p class="text-sm font-medium text-gray-800 dark:text-gray-200 truncate">
@@ -68,19 +58,7 @@
           :disabled="file.uploading"
           @click="$emit('remove', file.id)"
         >
-          <svg
-            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <IconClose class="w-4 h-4 text-gray-500 dark:text-gray-400" />
         </button>
       </li>
     </ul>
@@ -88,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+import { IconDocument, IconClose } from '../icons'
 import type { ChatAttachment, ChatInputUI, ChatInputTexts } from '../../types'
 
 interface UploadingAttachment extends ChatAttachment {

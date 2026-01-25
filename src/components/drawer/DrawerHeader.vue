@@ -12,19 +12,7 @@
           :class="ui?.newChatButton"
           @click="$emit('new-chat')"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"
-            />
-          </svg>
+          <IconSparkles class="w-4 h-4" />
           <span>{{ t('newChat') }}</span>
         </button>
         <span
@@ -54,20 +42,10 @@
         class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-gray-100 dark:bg-gray-800"
         :class="ui?.messageCountBadge"
       >
-        <svg 
+        <IconChatBubble 
           class="w-3.5 h-3.5" 
           :class="messageCountIconClass"
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor" 
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-          />
-        </svg>
+        />
         <span 
           class="text-xs font-medium tabular-nums"
           :class="messageCountClass"
@@ -103,19 +81,7 @@
           v-else-if="quota.remaining === 0" 
           class="flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 dark:bg-red-900/20"
         >
-          <svg
-            class="w-3.5 h-3.5 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
+          <IconWarning class="w-3.5 h-3.5 text-red-500" />
           <span class="text-xs text-red-600 dark:text-red-400 font-medium">
             {{ t('noQuota') }}
           </span>
@@ -135,19 +101,7 @@
         :title="t('close')"
         @click="$emit('close')"
       >
-        <svg
-          class="w-5 h-5 text-gray-600 dark:text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <IconClose class="w-5 h-5 text-gray-600 dark:text-gray-400" />
       </button>
 
       <button
@@ -158,19 +112,7 @@
         :title="t('minimize')"
         @click="$emit('minimize')"
       >
-        <svg
-          class="w-5 h-5 text-gray-600 dark:text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M5 12h14"
-          />
-        </svg>
+        <IconMinimize class="w-5 h-5 text-gray-600 dark:text-gray-400" />
       </button>
 
       <button
@@ -181,34 +123,14 @@
         :title="isFullscreen ? t('exitFullscreen') : t('fullscreen')"
         @click="$emit('toggle-fullscreen')"
       >
-        <svg
+        <IconFullscreen
           v-if="!isFullscreen"
           class="w-5 h-5 text-gray-600 dark:text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
-          />
-        </svg>
-        <svg
+        />
+        <IconExitFullscreen
           v-else
           class="w-5 h-5 text-gray-600 dark:text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="1.5"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25"
-          />
-        </svg>
+        />
       </button>
     </div>
   </div>
@@ -216,6 +138,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { IconSparkles, IconChatBubble, IconWarning, IconClose, IconMinimize, IconFullscreen, IconExitFullscreen } from '../icons'
 import type { AiChatDrawerUI, AiChatDrawerTexts, ChatQuota } from '../../types'
 
 interface Props {
