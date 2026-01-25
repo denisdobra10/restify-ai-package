@@ -11,11 +11,27 @@ import type { AISuggestion } from '../types'
 export function useAiSuggestions() {
   const { context } = useAiContext()
   const store = useRestifyAiStore()
+  const config = getRestifyAiConfig()
+
+  function getCurrentPath(): string {
+    if (context.value?.routePath) {
+      return context.value.routePath
+    }
+    return typeof window !== 'undefined' ? window.location.pathname : '/'
+  }
+
+  function filterByPermissions(suggestions: AISuggestion[]): AISuggestion[] {
+    if (!config?.can) return suggestions
+
+    return suggestions.filter((suggestion) => {
+      if (!suggestion.permission) return true
+      return config.can!(suggestion.permission)
+    })
+  }
 
   const suggestions = computed<AISuggestion[]>(() => {
     // Support mode suggestion when quota is 0
     if (store.quota.remaining === 0) {
-      const config = getRestifyAiConfig()
       if (config?.enableSupportMode !== false) {
         return [
           {
@@ -31,23 +47,10 @@ export function useAiSuggestions() {
       return []
     }
 
-    const currentPath = context.value?.routePath || 
-      (typeof window !== 'undefined' ? window.location.pathname : '/')
-    
+    const currentPath = getCurrentPath()
     const allSuggestions = getSuggestionsForPath(currentPath, context.value) || []
 
-    // Filter by permissions if available
-    const config = getRestifyAiConfig()
-    if (config?.can) {
-      return allSuggestions.filter((suggestion) => {
-        if (suggestion.permission && !config.can!(suggestion.permission)) {
-          return false
-        }
-        return true
-      })
-    }
-
-    return allSuggestions
+    return filterByPermissions(allSuggestions)
   })
 
   const hasContextualSuggestions = computed(() => {
@@ -56,9 +59,7 @@ export function useAiSuggestions() {
 
   function resolvePrompt(suggestion: AISuggestion): string {
     if (typeof suggestion.prompt === 'function') {
-      return suggestion.prompt(
-        context.value || { pageType: 'default' },
-      )
+      return suggestion.prompt(context.value || { pageType: 'default' })
     }
     return suggestion.prompt
   }
