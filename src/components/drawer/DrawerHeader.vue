@@ -58,7 +58,7 @@
 
       <!-- Separator -->
       <span 
-        v-if="showMessageCount && hasHistory && showQuota && quota.remaining >= 0" 
+        v-if="showSeparator" 
         class="text-gray-300 dark:text-gray-600"
       >
         •
@@ -167,25 +167,31 @@ defineEmits<{
   (e: 'toggle-fullscreen'): void
 }>()
 
-const messageCountClass = computed(() => {
+// Helper for message count status
+function getMessageCountStatus(): 'danger' | 'warning' | 'default' {
   const ratio = props.messageCount / props.messageLimit
-  if (ratio >= 1) {
-    return 'text-red-600 dark:text-red-400'
-  }
-  if (ratio >= 0.8) {
-    return 'text-amber-600 dark:text-amber-400'
-  }
-  return 'text-gray-600 dark:text-gray-300'
-})
+  if (ratio >= 1) return 'danger'
+  if (ratio >= 0.8) return 'warning'
+  return 'default'
+}
 
-const messageCountIconClass = computed(() => {
-  const ratio = props.messageCount / props.messageLimit
-  if (ratio >= 1) {
-    return 'text-red-500 dark:text-red-400'
-  }
-  if (ratio >= 0.8) {
-    return 'text-amber-500 dark:text-amber-400'
-  }
-  return 'text-gray-400 dark:text-gray-500'
-})
+const statusColors = {
+  icon: {
+    danger: 'text-red-500 dark:text-red-400',
+    warning: 'text-amber-500 dark:text-amber-400',
+    default: 'text-gray-400 dark:text-gray-500',
+  },
+  text: {
+    danger: 'text-red-600 dark:text-red-400',
+    warning: 'text-amber-600 dark:text-amber-400',
+    default: 'text-gray-600 dark:text-gray-300',
+  },
+}
+
+const messageCountClass = computed(() => statusColors.text[getMessageCountStatus()])
+const messageCountIconClass = computed(() => statusColors.icon[getMessageCountStatus()])
+
+const showSeparator = computed(() => 
+  props.showMessageCount && props.hasHistory && props.showQuota && props.quota.remaining >= 0
+)
 </script>
