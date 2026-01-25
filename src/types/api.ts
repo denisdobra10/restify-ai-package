@@ -1,4 +1,4 @@
-import type { ChatAttachment, ChatMessage } from './chat'
+import type { ChatMessage } from './chat'
 
 /**
  * Request/Response Types for hooks
@@ -8,7 +8,7 @@ export interface AiRequestPayload {
   history: Array<{
     role: string
     content: string
-    
+
   }>
   stream: boolean
   files?: Array<Record<string, unknown>>

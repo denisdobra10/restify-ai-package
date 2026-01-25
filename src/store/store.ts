@@ -1,6 +1,6 @@
 import { nextTick } from 'vue'
 import { defineStore } from 'pinia'
-import { fetchEventSource, type EventSourceMessage } from '@microsoft/fetch-event-source'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
 import type {
   ChatAttachment,
   Mention,

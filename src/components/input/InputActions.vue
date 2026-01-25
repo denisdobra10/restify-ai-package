@@ -21,9 +21,15 @@
       :title="texts?.exitSupportMode || 'Exit support mode'"
       @click="$emit('toggle-support-mode')"
     >
-      <IconQuestionCircle class="w-3.5 h-3.5" :stroke-width="2" />
+      <IconQuestionCircle
+        class="w-3.5 h-3.5"
+        :stroke-width="2"
+      />
       <span>{{ texts?.supportLabel || 'Support' }}</span>
-      <IconClose class="w-3 h-3" :stroke-width="2" />
+      <IconClose
+        class="w-3 h-3"
+        :stroke-width="2"
+      />
     </button>
 
     <!-- Send/Stop Button -->
@@ -34,8 +40,14 @@
       type="button"
       @click.prevent="$emit('click')"
     >
-      <IconSend v-if="!sending" class="w-4 h-4" />
-      <IconStop v-else class="w-4 h-4" />
+      <IconSend
+        v-if="!sending"
+        class="w-4 h-4"
+      />
+      <IconStop
+        v-else
+        class="w-4 h-4"
+      />
     </button>
   </div>
 </template>
