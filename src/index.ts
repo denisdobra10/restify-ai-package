@@ -5,6 +5,9 @@ import { setRestifyAiConfig, defaultLabels } from './config'
 // Import styles
 import './styles/index.css'
 
+// Export utilities
+export { isImageFile, formatFileSize } from './utils'
+
 // Export types
 export type {
   ChatMessage as ChatMessageType,

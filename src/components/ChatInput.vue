@@ -1,14 +1,14 @@
 <template>
   <div
     class="px-4 pb-4 bg-white dark:bg-gray-900 sticky bottom-0"
-    :class="uiClasses.root"
+    :class="ui?.root"
     @dragenter.prevent="fileAttachments.handleDragEnter"
     @dragover.prevent="fileAttachments.handleDragOver"
     @dragleave.prevent="fileAttachments.handleDragLeave"
     @drop.prevent="fileAttachments.handleDrop"
   >
     <form
-      :class="uiClasses.form"
+      :class="ui?.form"
       @submit.prevent="handleSubmit"
     >
       <div class="max-w-3xl mx-auto space-y-3">
@@ -25,7 +25,7 @@
         <AttachmentsPreview
           v-if="fileAttachments.hasAttachments.value"
           :attachments="fileAttachments.attachments.value"
-          :ui="uiClasses"
+          :ui="ui || {}"
           :texts="texts"
           :is-image="fileAttachments.isImage"
           :format-file-size="fileAttachments.formatFileSize"
@@ -34,7 +34,7 @@
 
         <div
           class="relative"
-          :class="uiClasses.inputContainer"
+          :class="ui?.inputContainer"
         >
           <!-- Suggestions Dropdown -->
           <SuggestionsDropdown
@@ -42,7 +42,7 @@
             ref="suggestionsHandler.dropdownRef.value"
             :suggestions="suggestions"
             :selected-index="suggestionsHandler.selectedSuggestionIndex.value"
-            :ui="uiClasses"
+            :ui="ui || {}"
             @select="handleSuggestionClick"
             @hover="suggestionsHandler.selectedSuggestionIndex.value = $event"
           />
@@ -70,7 +70,7 @@
           <div
             class="rounded-2xl border shadow-lg transition-all duration-200 bg-white dark:bg-gray-800"
             :class="[
-              uiClasses.inputWrapper,
+              ui?.inputWrapper,
               {
                 'border-primary shadow-primary/30': isFocused || fileAttachments.isDraggingFiles.value,
                 'border-gray-200 dark:border-gray-700 shadow-gray-100 dark:shadow-gray-900': !isFocused && !fileAttachments.isDraggingFiles.value,
@@ -81,7 +81,7 @@
             <button
               type="button"
               class="absolute left-3 top-1/2 -translate-y-1/2 h-9 w-9 rounded-xl flex items-center justify-center text-gray-500 dark:text-gray-400 hover:text-primary transition z-10"
-              :class="uiClasses.attachButton"
+              :class="ui?.attachButton"
               :title="texts?.attachFiles || 'Attach files'"
               @click="triggerFilePicker"
             >
@@ -98,7 +98,7 @@
                 :placeholder="computedPlaceholder"
                 :disabled="disabled"
                 class="block w-full bg-transparent py-3 text-sm leading-5 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 border-0 focus:outline-none focus-visible:outline-none resize-none"
-                :class="uiClasses.textarea"
+                :class="ui?.textarea"
                 :style="textareaStyle"
                 @input="handleTextInput"
                 @keydown="handleKeyDown"
@@ -113,7 +113,7 @@
               :can-send="canSend"
               :support-request-mode="supportRequestMode"
               :show-support-mode-toggle="showSupportModeToggle"
-              :ui="uiClasses"
+              :ui="ui || {}"
               :texts="texts"
               @toggle-support-mode="$emit('toggle-support-mode')"
               @click="handleButtonClick"
@@ -130,7 +130,7 @@
             <button
               type="button"
               class="text-xs text-gray-400 hover:text-primary transition-colors"
-              :class="uiClasses.contextLink"
+              :class="ui?.contextLink"
               @click="$emit('context-link-click')"
             >
               {{ contextLinkText }}
@@ -186,9 +186,6 @@ const props = withDefaults(defineProps<Props>(), {
   showSupportModeToggle: false,
   contextLinkText: '',
 })
-
-// UI class helper
-const uiClasses = computed(() => props.ui || {})
 
 interface Mention {
   id: string
@@ -258,8 +255,7 @@ const textareaStyle = computed(() => {
 
 const isValid = computed(() => {
   const trimmed = internalValue.value?.trim() ?? ''
-  if (trimmed.length >= props.minLength) return true
-  return fileAttachments.hasAttachments.value
+  return trimmed.length >= props.minLength || fileAttachments.hasAttachments.value
 })
 
 const canSend = computed(() => 

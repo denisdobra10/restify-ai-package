@@ -2,7 +2,7 @@
   <div
     class="group relative animate-in fade-in slide-in-from-bottom-2 duration-300"
     :class="[
-      ui.root,
+      ui?.root,
       {
         'flex justify-end': message.role === 'user',
         'flex justify-start': message.role === 'assistant',
@@ -13,24 +13,24 @@
     <div 
       v-if="message.role === 'user'" 
       class="flex gap-3 justify-end"
-      :class="ui.userMessage"
+      :class="ui?.userMessage"
     >
       <!-- Message Content -->
       <div 
         class="rounded-2xl px-4 py-3 bg-primary-500 text-white max-w-fit"
-        :class="ui.userBubble"
+        :class="ui?.userBubble"
       >
         <p
           v-if="message.message"
           class="text-sm whitespace-pre-wrap"
-          :class="[ui.content, { 'line-clamp-4': !isExpanded && isLongMessage }]"
+          :class="[ui?.content, { 'line-clamp-4': !isExpanded && isLongMessage }]"
         >
           {{ message.message }}
         </p>
         <button
           v-if="isLongMessage"
           class="mt-2 text-xs text-white/80 hover:text-white underline"
-          :class="ui.showMoreButton"
+          :class="ui?.showMoreButton"
           @click="toggleExpanded"
         >
           {{ isExpanded ? t('showLess') : t('showMore') }}
@@ -40,7 +40,7 @@
         <div 
           v-if="hasAttachments" 
           class="mt-3 space-y-2"
-          :class="ui.attachmentsContainer"
+          :class="ui?.attachmentsContainer"
         >
           <component
             :is="file.url ? 'a' : 'div'"
@@ -50,11 +50,11 @@
             :target="file.url ? '_blank' : undefined"
             rel="noopener noreferrer"
             class="flex items-center gap-3 rounded-xl border border-white/20 bg-white/10 p-2 transition"
-            :class="[ui.attachmentItem, file.url ? 'hover:bg-white/20 cursor-pointer' : '']"
+            :class="[ui?.attachmentItem, file.url ? 'hover:bg-white/20 cursor-pointer' : '']"
           >
             <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-white/20 overflow-hidden">
               <img
-                v-if="file.url && isImage(file)"
+                v-if="file.url && isImageFile(file)"
                 :src="file.url"
                 class="object-cover h-full w-full"
                 alt=""
@@ -85,7 +85,7 @@
       <!-- User Avatar -->
       <div 
         class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary-500 overflow-hidden"
-        :class="ui.userAvatar"
+        :class="ui?.userAvatar"
       >
         <img 
           v-if="userAvatarUrl" 
@@ -104,7 +104,7 @@
     <div 
       v-else 
       class="flex items-start gap-3"
-      :class="ui.assistantMessage"
+      :class="ui?.assistantMessage"
     >
       <!-- Avatar -->
       <div class="flex-shrink-0 group-hover:opacity-0 transition-opacity">
@@ -114,40 +114,21 @@
       <!-- Message Content -->
       <div 
         class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-4 py-3 shadow-sm rounded-2xl transition-all duration-200 max-w-[85%]"
-        :class="ui.assistantBubble"
+        :class="ui?.assistantBubble"
       >
         <!-- Loading State -->
-        <div 
-          v-if="message.loading" 
-          class="flex items-center gap-2 text-sm min-w-[150px]"
-          :class="ui.loadingIndicator"
-        >
-          <div
-            class="flex space-x-1"
-            :class="ui.loadingDots"
-          >
-            <div
-              class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-              style="animation-delay: 0ms"
-            />
-            <div
-              class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-              style="animation-delay: 150ms"
-            />
-            <div
-              class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-              style="animation-delay: 300ms"
-            />
-          </div>
-          <span class="text-gray-600 dark:text-gray-400">{{ texts?.loadingText || loadingText }}</span>
-        </div>
+        <LoadingIndicator
+          v-if="message.loading"
+          :text="texts?.loadingText || loadingText"
+          :ui="{ loadingIndicator: ui?.loadingIndicator, loadingDots: ui?.loadingDots }"
+        />
 
         <!-- Message Content -->
         <div
           v-else-if="message.message"
           :id="message.id"
           class="text-sm text-gray-700 dark:text-gray-200 leading-relaxed"
-          :class="ui.content"
+          :class="ui?.content"
           v-html="renderedMessage"
         />
 
@@ -155,7 +136,7 @@
         <div 
           v-if="!message.loading && hasAttachments" 
           class="mt-4 space-y-2"
-          :class="ui.attachmentsContainer"
+          :class="ui?.attachmentsContainer"
         >
           <component
             :is="file.url ? 'a' : 'div'"
@@ -165,11 +146,11 @@
             :target="file.url ? '_blank' : undefined"
             rel="noopener noreferrer"
             class="flex items-center gap-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 p-3 transition"
-            :class="[ui.attachmentItem, file.url ? 'hover:bg-white dark:hover:bg-gray-600 cursor-pointer' : '']"
+            :class="[ui?.attachmentItem, file.url ? 'hover:bg-white dark:hover:bg-gray-600 cursor-pointer' : '']"
           >
             <div class="h-12 w-12 flex items-center justify-center rounded-lg bg-white dark:bg-gray-800 overflow-hidden border border-gray-200 dark:border-gray-600">
               <img
-                v-if="file.url && isImage(file)"
+                v-if="file.url && isImageFile(file)"
                 :src="file.url"
                 class="object-cover h-full w-full"
                 alt=""
@@ -203,7 +184,7 @@
       v-if="message.role === 'assistant' && !message.loading && !message.streaming && showActions"
       :message="message"
       class="absolute top-0 left-0"
-      :class="ui.actionsContainer"
+      :class="ui?.actionsContainer"
       @copy="handleCopy"
     />
   </div>
@@ -213,9 +194,11 @@
 import { computed, ref } from 'vue'
 import AiAvatar from './AiAvatar.vue'
 import ChatMessageActions from './ChatMessageActions.vue'
+import LoadingIndicator from './LoadingIndicator.vue'
 import { IconDocument, IconUser } from './icons'
 import { useChatMarkdown } from '../composables/useChatMarkdown'
 import { getRestifyAiConfig } from '../config'
+import { isImageFile, formatFileSize } from '../utils'
 import type { ChatMessage, ChatAttachment, ChatMessageUI, ChatMessageTexts } from '../types'
 
 interface Props {
@@ -252,9 +235,6 @@ const t = (key: keyof ChatMessageTexts): string => {
   return defaults[key] || key
 }
 
-// UI class helpers
-const ui = computed(() => props.ui || {})
-
 const { parseMarkdown } = useChatMarkdown()
 
 const isExpanded = ref(false)
@@ -272,12 +252,6 @@ function toggleExpanded() {
   isExpanded.value = !isExpanded.value
 }
 
-function isImage(file: ChatAttachment): boolean {
-  const type = file.type || ''
-  if (type.startsWith('image/')) return true
-  return /(png|jpe?g|gif|webp)$/i.test(file.name || '')
-}
-
 // Get user avatar from config
 const userAvatarUrl = computed(() => {
   const config = getRestifyAiConfig()
@@ -286,15 +260,6 @@ const userAvatarUrl = computed(() => {
   if (typeof config.userAvatar === 'function') return config.userAvatar()
   return null
 })
-
-function formatFileSize(size?: number | string): string {
-  if (size === undefined || size === null) return ''
-  const value = typeof size === 'string' ? parseInt(size, 10) : size
-  if (Number.isNaN(value)) return ''
-  if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`
-  if (value >= 1024) return `${Math.round(value / 1024)} KB`
-  return `${value} B`
-}
 
 const renderedMessage = computed(() => {
   if (props.message.role === 'assistant') {

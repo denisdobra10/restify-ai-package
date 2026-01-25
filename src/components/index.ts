@@ -7,6 +7,7 @@ export { default as ChatInput } from './ChatInput.vue'
 export { default as AiEmptyState } from './AiEmptyState.vue'
 export { default as AiChatDrawer } from './AiChatDrawer.vue'
 export { default as ErrorBoundary } from './ErrorBoundary.vue'
+export { default as LoadingIndicator } from './LoadingIndicator.vue'
 
 // Icons
 export * from './icons'
