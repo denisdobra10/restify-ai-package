@@ -1,6 +1,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { getConfigValue, getRestifyAiConfig } from '../config'
 import { useRestifyAiStore } from '../store'
+import { isImageFile, formatFileSize } from '../utils'
 import type { ChatAttachment, MentionItem, MentionProvider } from '../types'
 import { detectMentionContext, getActiveMentionProviders } from './useMentionParsing'
 
@@ -26,21 +27,6 @@ export function useFileAttachments() {
     const hasAttachments = computed(() => attachments.value.length > 0)
     const isUploading = computed(() => attachments.value.some(a => a.uploading))
     const canAddMore = computed(() => attachments.value.length < maxAttachments)
-
-    function isImage(file: UploadingAttachment): boolean {
-        const type = file.type || ''
-        if (type.startsWith('image/')) return true
-        return /(png|jpe?g|gif|webp)$/i.test(file.name)
-    }
-
-    function formatFileSize(size?: number | string): string {
-        if (size === undefined || size === null) return ''
-        const value = typeof size === 'string' ? parseInt(size, 10) : size
-        if (Number.isNaN(value)) return ''
-        if (value >= 1024 * 1024) return `${(value / (1024 * 1024)).toFixed(1)} MB`
-        if (value >= 1024) return `${Math.round(value / 1024)} KB`
-        return `${value} B`
-    }
 
     function addLocalFile(file: File) {
         const id = crypto.randomUUID()
@@ -182,8 +168,8 @@ export function useFileAttachments() {
         canAddMore,
         acceptedFileTypes,
 
-        // Utils
-        isImage,
+        // Utils (re-exported from utils/fileHelpers)
+        isImage: isImageFile,
         formatFileSize,
 
         // Actions
