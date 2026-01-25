@@ -10,6 +10,7 @@
     <div
       v-if="show"
       class="absolute inset-0 bg-black/50 flex items-center justify-center z-10"
+      @click.self="$emit('cancel')"
     >
       <div 
         class="bg-white dark:bg-gray-800 rounded-xl p-6 m-4 max-w-sm w-full shadow-xl"
