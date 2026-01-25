@@ -53,6 +53,7 @@ export interface ChatError {
   failedAttachments?: ChatAttachment[] | null
   timestamp: number | null
   quotaExceeded?: boolean
+  rateLimited?: boolean
 }
 
 export interface SubmitPayload {

@@ -16,6 +16,7 @@ export interface AiChatDrawerTexts {
   confirmClose?: string
   cancel?: string
   retry?: string
+  retryHint?: string
   keyboardShortcutHint?: string
   placeholder?: string
   supportPlaceholder?: string

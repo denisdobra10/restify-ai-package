@@ -350,19 +350,19 @@ function handleCopy(message: ChatMessage) {
 
 /* Markdown content styling for assistant messages */
 :deep(h1) {
-  @apply text-lg font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2 first:mt-0;
+  @apply text-lg font-bold mt-4 mb-2 first:mt-0;
 }
 
 :deep(h2) {
-  @apply text-base font-bold text-gray-900 dark:text-gray-100 mt-4 mb-2 first:mt-0;
+  @apply text-base font-bold mt-4 mb-2 first:mt-0;
 }
 
 :deep(h3) {
-  @apply text-sm font-bold text-gray-900 dark:text-gray-100 mt-3 mb-1.5 first:mt-0;
+  @apply text-sm font-bold mt-3 mb-1.5 first:mt-0;
 }
 
 :deep(h4), :deep(h5), :deep(h6) {
-  @apply text-sm font-semibold text-gray-900 dark:text-gray-100 mt-3 mb-1 first:mt-0;
+  @apply text-sm font-semibold mt-3 mb-1 first:mt-0;
 }
 
 :deep(p) {
@@ -378,7 +378,7 @@ function handleCopy(message: ChatMessage) {
 }
 
 :deep(li) {
-  @apply text-sm text-gray-700 dark:text-gray-200;
+  @apply text-sm;
 }
 
 :deep(li > p) {
@@ -386,11 +386,11 @@ function handleCopy(message: ChatMessage) {
 }
 
 :deep(code) {
-  @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-1.5 py-0.5 rounded text-xs font-mono;
+  @apply px-1.5 py-0.5 rounded text-xs font-mono;
 }
 
 :deep(pre) {
-  @apply bg-gray-100 dark:bg-gray-700 rounded-lg p-3 my-3 overflow-x-auto;
+  @apply rounded-lg p-3 my-3 overflow-x-auto;
 }
 
 :deep(pre code) {
@@ -398,7 +398,7 @@ function handleCopy(message: ChatMessage) {
 }
 
 :deep(blockquote) {
-  @apply border-l-4 border-gray-300 dark:border-gray-600 pl-4 my-3 italic text-gray-600 dark:text-gray-400;
+  @apply border-l-4 pl-4 my-3 italic;
 }
 
 :deep(a) {
@@ -406,7 +406,7 @@ function handleCopy(message: ChatMessage) {
 }
 
 :deep(strong) {
-  @apply font-semibold text-gray-900 dark:text-gray-100;
+  @apply font-semibold;
 }
 
 :deep(em) {
@@ -418,14 +418,14 @@ function handleCopy(message: ChatMessage) {
 }
 
 :deep(th) {
-  @apply bg-gray-100 dark:bg-gray-700 px-3 py-2 text-left font-semibold text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-600;
+  @apply px-3 py-2 text-left font-semibold border;
 }
 
 :deep(td) {
-  @apply px-3 py-2 border border-gray-200 dark:border-gray-600;
+  @apply px-3 py-2 border;
 }
 
 :deep(hr) {
-  @apply my-4 border-gray-200 dark:border-gray-600;
+  @apply my-4;
 }
 </style>

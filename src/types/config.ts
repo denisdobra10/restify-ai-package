@@ -78,6 +78,7 @@ export interface RestifyAiLabels {
   craftingText?: string
   quotaRemaining?: string
   noQuota?: string
+  rateLimitExceeded?: string
   contactSupport?: string
   close?: string
   minimize?: string
@@ -164,6 +165,7 @@ export interface RestifyAiConfig {
   // Features
   keyboardShortcut?: string | null
   enableSupportMode?: boolean
+  useQuota?: boolean
   canToggle?: () => boolean
 
   // Custom components

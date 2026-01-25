@@ -154,6 +154,7 @@ export interface RestifyAiPluginOptions {
   // Features
   keyboardShortcut?: string | null
   enableSupportMode?: boolean
+  useQuota?: boolean
   canToggle?: () => boolean
 
   // Custom components
@@ -235,6 +236,7 @@ export const RestifyAiPlugin: Plugin<[RestifyAiPluginOptions]> = {
       // Features
       keyboardShortcut: options.keyboardShortcut,
       enableSupportMode: options.enableSupportMode,
+      useQuota: options.useQuota,
       canToggle: options.canToggle,
 
       // Custom components

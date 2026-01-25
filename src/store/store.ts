@@ -165,7 +165,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
           const history = this.chatHistory.map((item) => ({
             role: item.role,
             content: item.message,
-            
+
           }))
 
           const filesMap: Record<string, Record<string, unknown>> = {}
@@ -232,7 +232,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
             stream: true,
             ...(files.length > 0 && { files }),
             ...(Object.keys(context).length > 0 && { context }),
-            
+
             ...(this.supportRequestMode && { contact_support: true }),
             ...(config.model && { model: config.model }),
             ...(config.temperature && { temperature: config.temperature }),
@@ -270,14 +270,17 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
               if (response.status === 429) {
                 const store = useRestifyAiStore()
                 store.error = {
-                  message: getLabel('noQuota'),
+                  message: getLabel('rateLimitExceeded'),
                   failedQuestion: question,
                   failedAttachments: normalizedAttachments,
                   timestamp: Date.now(),
                   quotaExceeded: true,
+                  rateLimited: true,
                 }
-                await store.fetchQuota()
-                throw new Error('Quota exceeded')
+                if (config.useQuota !== false) {
+                  await store.fetchQuota()
+                }
+                throw new Error('Rate limit exceeded')
               }
               throw new Error(`Failed to connect: ${response.status}`)
             },
@@ -443,6 +446,9 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
 
     async fetchQuota(): Promise<void> {
       const config = getRestifyAiConfig()
+      if (config?.useQuota === false) {
+        return
+      }
       if (!config?.endpoints?.quota) return
 
       try {
@@ -556,7 +562,7 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
     },
 
     toggleDrawer(): void {
-      
+
       this.showChat = !this.showChat
       saveDrawerState(this.showChat)
       getRestifyAiConfig()?.onDrawerToggle?.(this.showChat)

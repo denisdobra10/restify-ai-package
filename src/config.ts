@@ -17,6 +17,7 @@ export const defaultLabels: Required<RestifyAiLabels> = {
   craftingText: 'Crafting response...',
   quotaRemaining: '{count} questions remaining',
   noQuota: 'No AI credit available',
+  rateLimitExceeded: 'Rate limit exceeded. Please try again in a moment.',
   contactSupport: 'Contact Support',
   close: 'Close',
   minimize: 'Minimize',
