@@ -193,6 +193,8 @@ import { getLabel, isConfigured, getConfigValue } from '../config'
 import { useAiSuggestions } from '../composables/useAiSuggestions'
 import { useLoadingText } from '../composables/useLoadingText'
 import { useHistoryLimit } from '../composables/useHistoryLimit'
+import { useSuggestionFilter } from '../composables/useSuggestionFilter'
+import { useAutoScroll } from '../composables/useAutoScroll'
 import AiEmptyState from './AiEmptyState.vue'
 import ChatInput from './ChatInput.vue'
 import DrawerHeader from './drawer/DrawerHeader.vue'
@@ -200,8 +202,8 @@ import DrawerMessageList from './drawer/DrawerMessageList.vue'
 import SetupGuide from './drawer/SetupGuide.vue'
 import ConfirmDialog from './drawer/ConfirmDialog.vue'
 import type { 
-  ChatAttachment, 
-  AISuggestion, 
+  ChatAttachment,
+  AISuggestion,
   Mention, 
   HeaderSlotProps, 
   InputSlotProps,
@@ -319,35 +321,12 @@ const enableSupportMode = computed(() => getConfigValue('enableSupportMode') ?? 
 
 const { suggestions, resolvePrompt } = useAiSuggestions()
 
-// Count only user messages for the limit display
-const userMessageCount = computed(() => {
-  return store.chatHistory.filter((m: any) => m.role === "user").length
-})
-const mappedSuggestions = computed(() => {
-  if (isSetupMode.value) return []
-  
-  const rawQuery = question.value.toLowerCase().trim()
-  const allSuggestions = suggestions.value || []
-  
-  let filtered = allSuggestions
-  if (rawQuery) {
-    const stopWords = new Set(['a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'])
-    const queryWords = rawQuery.split(/\s+/).filter(w => !stopWords.has(w))
-    
-    if (queryWords.length > 0) {
-      filtered = allSuggestions.filter((s: AISuggestion) => {
-        const text = `${s.title} ${s.description || ''}`.toLowerCase()
-        return queryWords.every(word => text.includes(word))
-      })
-    }
-  }
-  
-  return filtered.slice(0, 5).map(s => ({
-    id: s.id,
-    title: s.title,
-    description: s.description || '',
-  }))
-})
+// Auto-scroll management
+const { scrollToBottom, watchForScroll } = useAutoScroll(chatContainer)
+
+// Suggestion filtering
+const enabledSuggestions = computed(() => isSetupMode.value ? [] : (suggestions.value || []))
+const { filteredSuggestions: mappedSuggestions } = useSuggestionFilter(enabledSuggestions, question)
 
 // Slot props
 const headerSlotProps = computed<HeaderSlotProps>(() => ({
@@ -406,14 +385,6 @@ function handleContactSupport() {
 
 function toggleSupportMode() {
   store.toggleSupportMode()
-}
-
-async function scrollToBottom() {
-  await nextTick()
-  const el = chatContainer.value
-  if (el) {
-    el.scrollTop = el.scrollHeight
-  }
 }
 
 function onExampleClick(item: { prompt: string }) {
@@ -520,22 +491,13 @@ function handleEscapeKey(e: KeyboardEvent) {
   }
 }
 
-// Auto-fetch quota when drawer opens
-// Auto-scroll to bottom when new messages are added
-watch(
+// Setup scroll watchers
+watchForScroll(
   () => store.chatHistory.length,
-  () => {
-    scrollToBottom()
-  }
+  () => store.chatHistory.map((m: any) => m.message).join("")
 )
 
-// Also scroll when streaming content updates
-watch(
-  () => store.chatHistory.map((m: any) => m.message).join(""),
-  () => {
-    scrollToBottom()
-  }
-)
+// Auto-fetch quota and focus when drawer opens
 watch(() => props.modelValue, async (isOpen) => {
   if (isOpen) {
     await scrollToBottom()

@@ -9,3 +9,5 @@ export { useKeyboardShortcut, useAiDrawerShortcut, type UseKeyboardShortcutOptio
 export { useLoadingText } from './useLoadingText'
 export { useHistoryLimit } from './useHistoryLimit'
 export { useFileAttachments, useMentionInput, useInputSuggestions, useTextareaResize } from './useChatInput'
+export { useSuggestionFilter } from './useSuggestionFilter'
+export { useAutoScroll } from './useAutoScroll'
