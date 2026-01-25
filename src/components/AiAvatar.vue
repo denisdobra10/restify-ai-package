@@ -1,11 +1,11 @@
 <template>
   <div 
-    class="w-6 h-6 min-w-[24px] flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600"
+    class="w-8 h-8 min-w-[32px] flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800"
     :class="ui?.container"
   >
     <slot>
       <IconSparkles 
-        class="w-4 h-4 text-gray-400 dark:text-gray-500" 
+        class="w-4 h-4 text-gray-500 dark:text-gray-400" 
         :class="ui?.icon"
       />
     </slot>
