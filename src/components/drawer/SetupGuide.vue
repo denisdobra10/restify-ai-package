@@ -1,18 +1,6 @@
 <template>
   <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
-    <svg
-      class="w-7 h-7 text-primary"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      stroke-width="1.5"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z"
-      />
-    </svg>
+    <IconSparkles class="w-7 h-7 text-primary" />
   </div>
   
   <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">
@@ -56,6 +44,8 @@ app.<span class="text-yellow-300">use</span>(RestifyAiPlugin, {
 </template>
 
 <script setup lang="ts">
+import { IconSparkles } from '../icons'
+
 interface Props {
   copied: boolean
 }
