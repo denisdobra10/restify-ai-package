@@ -242,7 +242,7 @@ const props = withDefaults(defineProps<Props>(), {
   topOffset: '0',
   position: 'right',
   showBackdrop: false,
-  closeOnBackdropClick: false,
+  closeOnBackdropClick: true,
   closeOnEscape: true,
   showQuota: true,
   showMessageCount: true,
