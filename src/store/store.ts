@@ -40,39 +40,72 @@ import {
 
 let controller = new AbortController()
 
+/**
+ * Initialize error state from storage or orphaned messages
+ */
+function initializeErrorState(
+  savedError: ReturnType<typeof loadErrorState>,
+  chatState: ReturnType<typeof loadChatHistory>
+): AiStoreState['error'] {
+  if (savedError?.message) {
+    return {
+      message: savedError.message,
+      failedQuestion: savedError.failedQuestion,
+      failedAttachments: savedError.failedAttachments,
+      timestamp: Date.now(),
+      quotaExceeded: false,
+    }
+  }
+
+  if (chatState.hasOrphanedUserMessage && chatState.orphanedMessage) {
+    return {
+      message: 'Previous request failed. Click retry to try again.',
+      failedQuestion: chatState.orphanedMessage.question,
+      failedAttachments: chatState.orphanedMessage.attachments,
+      timestamp: Date.now(),
+      quotaExceeded: false,
+    }
+  }
+
+  return {
+    message: null,
+    failedQuestion: null,
+    failedAttachments: null,
+    timestamp: null,
+    quotaExceeded: false,
+  }
+}
+
+/**
+ * Initialize quota from config and chat history
+ */
+function initializeQuota(userMessageCount: number): AiStoreState['quota'] {
+  const limit = getConfigValue('chatHistoryLimit') || 10
+  return {
+    limit,
+    used: userMessageCount,
+    remaining: Math.max(0, limit - userMessageCount),
+  }
+}
+
+/**
+ * Initialize setup state based on configuration
+ */
+function initializeSetupState(): SetupState {
+  if (!isConfigured() && !isSetupComplete()) {
+    return { ...getDefaultSetupState(), isActive: true }
+  }
+  return getDefaultSetupState()
+}
+
 export const useRestifyAiStore = defineStore('restifyAiStore', {
   state: (): AiStoreState => {
     const chatState = loadChatHistory()
     const savedError = loadErrorState()
-
-    let initialError: AiStoreState['error'] = {
-      message: null,
-      failedQuestion: null,
-      failedAttachments: null,
-      timestamp: null,
-      quotaExceeded: false,
-    }
-
-    if (savedError?.message) {
-      initialError = {
-        message: savedError.message,
-        failedQuestion: savedError.failedQuestion,
-        failedAttachments: savedError.failedAttachments,
-        timestamp: Date.now(),
-        quotaExceeded: false,
-      }
-    } else if (chatState.hasOrphanedUserMessage && chatState.orphanedMessage) {
-      initialError = {
-        message: 'Previous request failed. Click retry to try again.',
-        failedQuestion: chatState.orphanedMessage.question,
-        failedAttachments: chatState.orphanedMessage.attachments,
-        timestamp: Date.now(),
-        quotaExceeded: false,
-      }
-    }
+    const userMessageCount = chatState.history.filter((m: any) => m.role === 'user').length
 
     return {
-      chatHistoryLimit: getConfigValue("chatHistoryLimit") || 20,
+      chatHistoryLimit: getConfigValue('chatHistoryLimit') || 20,
       chatHistory: chatState.history,
       uploadedFiles: extractUploadedFiles(chatState.history),
       loading: false,
@@ -80,12 +113,10 @@ export const useRestifyAiStore = defineStore('restifyAiStore', {
       isFullscreen: false,
       sending: false,
       pageContext: null,
-      quota: (() => { const l = getConfigValue("chatHistoryLimit") || 10; const used = chatState.history.filter((m: any) => m.role === "user").length; return { limit: l, used, remaining: Math.max(0, l - used) } })(),
-      error: initialError,
+      quota: initializeQuota(userMessageCount),
+      error: initializeErrorState(savedError, chatState),
       supportRequestMode: false,
-      setupState: !isConfigured() && !isSetupComplete()
-        ? { ...getDefaultSetupState(), isActive: true }
-        : getDefaultSetupState(),
+      setupState: initializeSetupState(),
     }
   },
 
